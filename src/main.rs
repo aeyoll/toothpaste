@@ -14,7 +14,7 @@ use tide::{Response, StatusCode};
 #[derive(Template)]
 #[template(path = "get_paste.html")]
 struct GetPasteTemplate<'a> {
-    title: &'a str,
+    filename: &'a str,
     content: &'a str,
 }
 
@@ -32,7 +32,7 @@ lazy_static! {
 #[derive(Clone, Debug)]
 struct Paste {
     pub id: Option<u32>,
-    pub title: Option<String>,
+    pub filename: Option<String>,
     pub content: Option<String>,
 }
 
@@ -75,7 +75,7 @@ pub async fn get_paste(req: Request<()>) -> tide::Result<Response> {
 
     match paste {
         Some(paste) => {
-            response = GetPasteTemplate { title: &paste.title.unwrap() , content: &paste.content.unwrap() }.into();
+            response = GetPasteTemplate { filename: &paste.filename.unwrap() , content: &paste.content.unwrap() }.into();
         }
         None => {
             response = NotFoundTemplate { message: "Paste not found" }.into();
