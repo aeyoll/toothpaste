@@ -8,8 +8,13 @@ use askama::Template;
 use rbatis::crud::CRUD;
 use rbatis::rbatis::Rbatis;
 use tide::Request;
-
 use tide::{Response, StatusCode};
+
+use syntect::highlighting::ThemeSet;
+use syntect::html::highlighted_html_for_string;
+use syntect::parsing::SyntaxSet;
+
+const THEME: &str = "base16-eighties.dark";
 
 #[derive(Template)]
 #[template(path = "get_paste.html")]
@@ -73,9 +78,20 @@ pub async fn get_paste(req: Request<()>) -> tide::Result<Response> {
 
     match paste {
         Some(paste) => {
+            let s = &paste.content.unwrap();
+            let ss = SyntaxSet::load_defaults_newlines();
+            let syntax = ss.find_syntax_by_extension("sql").unwrap();
+            let ts = ThemeSet::load_defaults();
+
+            let html_content = highlighted_html_for_string(
+                s,
+                &ss,
+                syntax,
+                &ts.themes[THEME]
+            );
             response = GetPasteTemplate {
                 filename: &paste.filename.unwrap(),
-                content: &paste.content.unwrap(),
+                content: &html_content,
             }
             .into();
         }
