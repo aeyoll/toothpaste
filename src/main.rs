@@ -4,7 +4,6 @@ extern crate lazy_static;
 #[macro_use]
 extern crate rbatis;
 
-use askama::Template;
 use rbatis::crud::CRUD;
 use rbatis::rbatis::Rbatis;
 use tide::Request;
@@ -19,18 +18,8 @@ const THEME: &str = "base16-eighties.dark";
 mod cache;
 use cache::{HtmlCache, create_cache};
 
-#[derive(Template)]
-#[template(path = "get_paste.html")]
-struct GetPasteTemplate<'a> {
-    filename: &'a str,
-    content: &'a str,
-}
-
-#[derive(Template)]
-#[template(path = "404.html")]
-struct NotFoundTemplate<'a> {
-    message: &'a str,
-}
+mod template;
+use template::{GetPasteTemplate, NotFoundTemplate};
 
 lazy_static! {
     static ref RB: Rbatis = Rbatis::new();
