@@ -4,10 +4,10 @@ extern crate lazy_static;
 #[macro_use]
 extern crate rbatis;
 
-use rbatis::rbatis::Rbatis;
-use rbatis::crud::CRUD;
-use tide::Request;
 use askama::Template;
+use rbatis::crud::CRUD;
+use rbatis::rbatis::Rbatis;
+use tide::Request;
 
 use tide::{Response, StatusCode};
 
@@ -36,7 +36,6 @@ struct Paste {
     pub content: Option<String>,
 }
 
-
 #[async_std::main]
 async fn main() -> tide::Result<()> {
     dotenv::dotenv().ok();
@@ -57,7 +56,6 @@ async fn main() -> tide::Result<()> {
     Ok(())
 }
 
-
 pub async fn index(req: Request<()>) -> tide::Result<String> {
     let v = RB.fetch_list::<Paste>().await;
     Ok(serde_json::json!(v).to_string())
@@ -75,12 +73,19 @@ pub async fn get_paste(req: Request<()>) -> tide::Result<Response> {
 
     match paste {
         Some(paste) => {
-            response = GetPasteTemplate { filename: &paste.filename.unwrap() , content: &paste.content.unwrap() }.into();
+            response = GetPasteTemplate {
+                filename: &paste.filename.unwrap(),
+                content: &paste.content.unwrap(),
+            }
+            .into();
         }
         None => {
-            response = NotFoundTemplate { message: "Paste not found" }.into();
+            response = NotFoundTemplate {
+                message: "Paste not found",
+            }
+            .into();
             response.set_status(StatusCode::NotFound);
-        },
+        }
     }
 
     Ok(response)
