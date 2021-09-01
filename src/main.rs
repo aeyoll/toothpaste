@@ -16,7 +16,10 @@ use syntect::parsing::SyntaxSet;
 const THEME: &str = "base16-eighties.dark";
 
 mod cache;
-use cache::{HtmlCache, create_cache};
+use cache::create_cache;
+
+mod state;
+use state::State;
 
 mod template;
 use template::{GetPasteTemplate, NotFoundTemplate};
@@ -31,11 +34,6 @@ struct Paste {
     pub id: Option<u32>,
     pub filename: Option<String>,
     pub content: Option<String>,
-}
-
-#[derive(Clone)]
-pub struct State {
-    pub cache: HtmlCache,
 }
 
 #[async_std::main]
