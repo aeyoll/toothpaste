@@ -9,7 +9,7 @@ use rbatis::crud::CRUD;
 use tide::Request;
 use askama::Template;
 
-use tide::{http::mime::HTML, Body, Response};
+use tide::{Response, StatusCode};
 
 #[derive(Template)]
 #[template(path = "get_paste.html")]
@@ -31,6 +31,7 @@ lazy_static! {
 #[crud_table]
 #[derive(Clone, Debug)]
 struct Paste {
+    pub id: Option<u32>,
     pub title: Option<String>,
     pub content: Option<String>,
 }
@@ -67,6 +68,20 @@ pub async fn new(req: Request<()>) -> tide::Result<String> {
 }
 
 pub async fn get_paste(req: Request<()>) -> tide::Result<Response> {
-    let res: Response = GetPasteTemplate { title: "world", content: "world" }.into();
-    Ok(res)
+    let id = req.param("id").unwrap();
+    let paste: Option<Paste> = RB.fetch_by_column("id", &id.to_string()).await.unwrap();
+
+    let mut response: Response;
+
+    match paste {
+        Some(paste) => {
+            response = GetPasteTemplate { title: &paste.title.unwrap() , content: &paste.content.unwrap() }.into();
+        }
+        None => {
+            response = NotFoundTemplate { message: "Paste not found" }.into();
+            response.set_status(StatusCode::NotFound);
+        },
+    }
+
+    Ok(response)
 }

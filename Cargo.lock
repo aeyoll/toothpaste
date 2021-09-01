@@ -1290,6 +1290,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "http"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "527e8c9ac747e28542699a951517aa9a6945af506cd1f2e1b53a576c17b6cc11"
+dependencies = [
+ "bytes",
+ "fnv",
+ "itoa",
+]
+
+[[package]]
 name = "http-client"
 version = "6.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2867,6 +2878,7 @@ dependencies = [
  "chrono",
  "dotenv",
  "fast_log",
+ "http",
  "lazy_static",
  "log",
  "rbatis",
