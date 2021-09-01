@@ -28,13 +28,6 @@ lazy_static! {
     static ref RB: Rbatis = Rbatis::new();
 }
 
-#[crud_table]
-#[derive(Clone)]
-struct Paste {
-    pub id: Option<u32>,
-    pub filename: Option<String>,
-    pub content: Option<String>,
-}
 
 #[async_std::main]
 async fn main() -> tide::Result<()> {
