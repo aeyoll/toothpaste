@@ -7,6 +7,16 @@ extern crate rbatis;
 use rbatis::rbatis::Rbatis;
 use rbatis::crud::CRUD;
 use tide::Request;
+use askama::Template;
+
+use tide::{http::mime::HTML, Body, Response};
+
+#[derive(Template)]
+#[template(path = "get_paste.html")]
+struct GetPasteTemplate<'a> {
+    title: &'a str,
+    content: &'a str,
+}
 
 lazy_static! {
     static ref RB: Rbatis = Rbatis::new();
@@ -19,6 +29,7 @@ struct Paste {
     pub content: Option<String>,
 }
 
+
 #[async_std::main]
 async fn main() -> tide::Result<()> {
     dotenv::dotenv().ok();
@@ -30,7 +41,7 @@ async fn main() -> tide::Result<()> {
 
     app.at("/").get(index);
     app.at("/new").post(new);
-    app.at("/paste/:id").post(get_paste);
+    app.at("/paste/:id").get(get_paste);
 
     let addr = "127.0.0.1:8080";
     println!("http server listen on http://{}", addr);
@@ -49,6 +60,7 @@ pub async fn new(req: Request<()>) -> tide::Result<String> {
     Ok("".to_string())
 }
 
-pub async fn get_paste(req: Request<()>) -> tide::Result<String> {
-    Ok("".to_string())
+pub async fn get_paste(req: Request<()>) -> tide::Result<Response> {
+    let res: Response = GetPasteTemplate { title: "world", content: "world" }.into();
+    Ok(res)
 }

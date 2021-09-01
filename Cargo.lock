@@ -156,6 +156,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "askama_tide"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "12d2cbee67c51e2d2a33fa1988b2416688ffb1428025806a0ca0337d7df4e5da"
+dependencies = [
+ "askama",
+ "tide",
+]
+
+[[package]]
 name = "async-attributes"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2852,6 +2862,7 @@ name = "toothpaste"
 version = "0.1.0"
 dependencies = [
  "askama",
+ "askama_tide",
  "async-std",
  "chrono",
  "dotenv",
