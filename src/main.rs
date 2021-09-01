@@ -18,6 +18,12 @@ struct GetPasteTemplate<'a> {
     content: &'a str,
 }
 
+#[derive(Template)]
+#[template(path = "404.html")]
+struct NotFoundTemplate<'a> {
+    message: &'a str,
+}
+
 lazy_static! {
     static ref RB: Rbatis = Rbatis::new();
 }
