@@ -7,11 +7,21 @@
     {% block head %}{% endblock %}
 
     <title>{% block title %}{% endblock %}</title>
-    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel="stylesheet" href="/static/style.css">
   </head>
 
   <body>
-    {% block body %}
-    {% endblock %}
+    <div class="container">
+      <nav class="navigation">
+        <ul>
+          <li>
+            <a href="/">New paste</a>
+          </li>
+        </ul>
+      </nav>
+
+      {% block body %}
+      {% endblock %}
+    </div>
   </body>
 </html>

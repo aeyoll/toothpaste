@@ -1,0 +1,94 @@
+/**
+ Reset
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  color: #222;
+  font-family: "Source Code Pro", monospace;
+  font-size: 16px;
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+/**
+ Global elements
+ */
+pre {
+  padding: 15px;
+}
+
+a,
+a:hover,
+a:active,
+a:focus {
+  color: #222;
+}
+
+/**
+ Container
+ */
+.container {
+  margin: 0 auto;
+  max-width: 1170px;
+}
+
+/**
+  Main menu
+ */
+.navigation ul {
+  align-items: center;
+  display: flex;
+  list-style: none;
+  height: 40px;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+/**
+ Forms
+ */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  appearance: none;
+  background-clip: padding-box;
+  background-color: #fff;
+  border-radius: .25rem;
+  border: 1px solid #ced4da;
+  color: #212529;
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  width: 100%;
+}
+
+/**
+ Buttons
+ */
+.btn {
+  background-color: #222;
+  border-radius: .25rem;
+  border: 1px solid #222;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  vertical-align: middle;
+}
+
