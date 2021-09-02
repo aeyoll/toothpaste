@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 
-{% block body %}
+{% block title %}
+  New paste
+  {% call super() %}
+{% endblock %}
 
+{% block body %}
 <form action="/paste/new" method="post">
     <div class="form-group">
         <label for="filename">Filename</label>
