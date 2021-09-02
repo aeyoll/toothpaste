@@ -12,6 +12,7 @@ use cache::create_cache;
 use database::create_database_pool;
 use routes::get_paste::get_paste;
 use routes::index::index;
+use routes::new::new;
 use state::State;
 
 #[async_std::main]
@@ -31,7 +32,7 @@ async fn main() -> tide::Result<()> {
     let mut app = tide::with_state(state.clone());
 
     app.at("/").get(index);
-    // app.at("/new").post(new);
+    app.at("/paste/new").post(new);
     app.at("/paste/:id").get(get_paste);
     app.at("/static").serve_dir("static/")?;
 
@@ -41,7 +42,3 @@ async fn main() -> tide::Result<()> {
     app.listen(addr).await?;
     Ok(())
 }
-
-// pub async fn new(req: Request<State>) -> tide::Result<String> {
-//     Ok("".to_string())
-// }

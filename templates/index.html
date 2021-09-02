@@ -2,4 +2,18 @@
 
 {% block body %}
 Paste
+
+<form action="/paste/new" method="post">
+    <div class="form-group">
+        <label for="filename">Filename</label>
+        <input type="text" name="filename" id="filename">
+    </div>
+
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea name="content" id="content"></textarea>
+    </div>
+
+    <button type="submit">Send</button>
+</form>
 {% endblock %}
