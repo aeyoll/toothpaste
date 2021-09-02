@@ -1,10 +1,7 @@
-use crate::{paste::Paste, state::State};
-use rbatis::crud::CRUD;
-use tide::Request;
+use crate::{state::State, template::IndexTemplate};
+use tide::{Request, Response};
 
-pub async fn index(req: Request<State>) -> tide::Result<String> {
-    let state = req.state();
-    let pool = state.pool.lock().await;
-    let v = pool.fetch_list::<Paste>().await;
-    Ok(serde_json::json!(v).to_string())
+pub async fn index(_req: Request<State>) -> tide::Result<Response> {
+    let response = IndexTemplate {}.into();
+    Ok(response)
 }
