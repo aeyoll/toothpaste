@@ -33,6 +33,7 @@ async fn main() -> tide::Result<()> {
     app.at("/").get(index);
     // app.at("/new").post(new);
     app.at("/paste/:id").get(get_paste);
+    app.at("/static").serve_dir("static/")?;
 
     let addr = "127.0.0.1:8080";
     println!("http server listen on http://{}", addr);
