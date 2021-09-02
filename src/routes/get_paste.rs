@@ -9,6 +9,7 @@ use syntect::parsing::SyntaxSet;
 use crate::paste::Paste;
 use crate::state::State;
 use crate::template::{GetPasteTemplate, NotFoundTemplate};
+use std::path::Path;
 
 const THEME: &str = "base16-eighties.dark";
 
@@ -31,9 +32,15 @@ pub async fn get_paste(req: Request<State>) -> tide::Result<Response> {
             if let Some(response) = cache.get(&cache_key) {
                 html_content = response.clone();
             } else {
+                let filename = &paste.filename.as_ref().unwrap();
+                let extension = Path::new(filename).extension().unwrap().to_str().unwrap();
+
                 let s = &paste.content.unwrap();
                 let ss = SyntaxSet::load_defaults_newlines();
-                let syntax = ss.find_syntax_by_extension("sql").unwrap();
+                let syntax = match ss.find_syntax_by_extension(extension) {
+                    Some(syntax) => syntax,
+                    None => ss.find_syntax_plain_text(),
+                };
                 let ts = ThemeSet::load_defaults();
 
                 html_content = highlighted_html_for_string(s, &ss, syntax, &ts.themes[THEME]);
