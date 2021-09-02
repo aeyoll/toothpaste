@@ -48,6 +48,7 @@ pub async fn get_paste(req: Request<State>) -> tide::Result<Response> {
             }
 
             response = GetPasteTemplate {
+                id: &paste.id.unwrap(),
                 filename: &paste.filename.unwrap(),
                 content: &html_content,
             }
