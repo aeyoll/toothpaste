@@ -1,9 +1,6 @@
 #[macro_use]
 extern crate rbatis;
 
-use rbatis::crud::CRUD;
-use tide::Request;
-
 mod cache;
 mod database;
 mod paste;
@@ -13,8 +10,8 @@ mod template;
 
 use cache::create_cache;
 use database::create_database_pool;
-use paste::Paste;
 use routes::get_paste::get_paste;
+use routes::index::index;
 use state::State;
 
 #[async_std::main]
@@ -42,13 +39,6 @@ async fn main() -> tide::Result<()> {
 
     app.listen(addr).await?;
     Ok(())
-}
-
-pub async fn index(req: Request<State>) -> tide::Result<String> {
-    let state = req.state();
-    let pool = state.pool.lock().await;
-    let v = pool.fetch_list::<Paste>().await;
-    Ok(serde_json::json!(v).to_string())
 }
 
 // pub async fn new(req: Request<State>) -> tide::Result<String> {
