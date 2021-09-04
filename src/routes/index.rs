@@ -12,9 +12,7 @@ pub async fn index(req: Request<State>) -> tide::Result<Response> {
         Err(_err) => vec![],
     };
 
-    let response = IndexTemplate {
-        pastes
-    }.into();
+    let response = IndexTemplate { pastes }.into();
 
     Ok(response)
 }

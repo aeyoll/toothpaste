@@ -15,7 +15,7 @@ impl WeightScale<i64, String> for StringScale {
     }
 }
 
-// Initializes the cache, using the given configuration.
+// Initializes the cache
 pub fn create_cache() -> HtmlCache {
     let capacity = NonZeroUsize::new(67108864).unwrap(); // 64 MB
     let config = CLruCacheConfig::new(capacity)

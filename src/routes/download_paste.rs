@@ -22,7 +22,10 @@ pub async fn download_paste(req: Request<State>) -> tide::Result<Response> {
             response = Response::builder(200)
                 .body(content)
                 .header("Content-Transfer-Encoding", "Binary")
-                .header("Content-disposition", format!("attachment; filename=\"{}\"", paste.filename.unwrap()))
+                .header(
+                    "Content-disposition",
+                    format!("attachment; filename=\"{}\"", paste.filename.unwrap()),
+                )
                 .build();
         }
         None => {
