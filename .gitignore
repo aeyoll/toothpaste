@@ -4,5 +4,4 @@
 *.db-shm
 *.db-wal
 /static
-!/static/.gitkeep
 /node_modules
