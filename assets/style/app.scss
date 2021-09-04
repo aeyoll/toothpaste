@@ -9,10 +9,10 @@
 
 body {
   color: #222;
-  font-family: "Source Code Pro", monospace;
+  font-family: 'Source Code Pro', monospace;
   font-size: 16px;
   margin: 0;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /**
@@ -43,8 +43,8 @@ a:focus {
 .navigation ul {
   align-items: center;
   display: flex;
-  list-style: none;
   height: 40px;
+  list-style: none;
   margin: 0 0 1rem;
   padding: 0;
 }
@@ -60,8 +60,8 @@ a:focus {
   appearance: none;
   background-clip: padding-box;
   background-color: #fff;
-  border-radius: .25rem;
   border: 1px solid #ced4da;
+  border-radius: .25rem;
   color: #212529;
   display: block;
   font-size: 1rem;
@@ -77,8 +77,8 @@ a:focus {
  */
 .btn {
   background-color: #222;
-  border-radius: .25rem;
   border: 1px solid #222;
+  border-radius: .25rem;
   color: #fff;
   cursor: pointer;
   display: inline-block;
