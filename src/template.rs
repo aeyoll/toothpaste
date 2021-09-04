@@ -1,8 +1,16 @@
 use askama::Template;
 
+use crate::paste::Paste;
+
 #[derive(Template)]
 #[template(path = "index.html")]
-pub struct IndexTemplate {}
+pub struct IndexTemplate {
+    pub pastes: Vec<Paste>
+}
+
+#[derive(Template)]
+#[template(path = "create.html")]
+pub struct CreateTemplate {}
 
 #[derive(Template)]
 #[template(path = "get_paste.html")]

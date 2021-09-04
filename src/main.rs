@@ -12,6 +12,7 @@ mod template;
 use cache::create_cache;
 use database::create_database_pool;
 use routes::download_paste::download_paste;
+use routes::create::create;
 use routes::get_paste::get_paste;
 use routes::index::index;
 use routes::new::new;
@@ -34,6 +35,7 @@ async fn main() -> tide::Result<()> {
     let mut app = tide::with_state(state.clone());
 
     app.at("/").get(index);
+    app.at("/paste/create").get(create);
     app.at("/paste/new").post(new);
     app.at("/paste/:id").get(get_paste);
     app.at("/paste/:id/download").get(download_paste);

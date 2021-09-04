@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New paste
+    {% call super() %}
+{% endblock %}
+
+{% block body %}
+<form action="/paste/new" method="post">
+    <div class="form-group">
+        <label for="filename">Filename</label>
+        <input type="text" name="filename" id="filename" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea name="content" id="content" class="form-control" required rows="20"></textarea>
+    </div>
+
+    <button type="submit" class="btn">Send</button>
+</form>
+{% endblock %}

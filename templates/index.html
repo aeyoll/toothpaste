@@ -1,22 +1,20 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  New paste
-  {% call super() %}
+    Paste
 {% endblock %}
 
 {% block body %}
-<form action="/paste/new" method="post">
-    <div class="form-group">
-        <label for="filename">Filename</label>
-        <input type="text" name="filename" id="filename" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="content">Content</label>
-        <textarea name="content" id="content" class="form-control" required rows="20"></textarea>
-    </div>
-
-    <button type="submit" class="btn">Send</button>
-</form>
+    {% for paste in pastes %}
+        <ul>
+        {% if paste.filename.is_some() %}
+            <li>
+                <a href="/paste/{{ paste.id.as_ref().unwrap() }}">
+                    #{{ paste.id.as_ref().unwrap() }} -
+                    {{ paste.filename.as_ref().unwrap() }}
+                </a>
+            </li>
+        {% endif %}
+        </ul>
+    {% endfor %}
 {% endblock %}
