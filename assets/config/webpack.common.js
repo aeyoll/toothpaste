@@ -2,12 +2,14 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const glob = require('glob');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
 
 const rootPath = process.cwd();
 
@@ -15,12 +17,21 @@ const assetPath = path.join(rootPath, 'assets');
 const distPath = path.join(rootPath, 'static');
 const publicPath = '/static/';
 
+function collectSafelist() {
+  return {
+    standard: ['pre'],
+    deep: [],
+    greedy: [],
+  };
+}
+
 module.exports = {
   entry: './assets/index.js',
 
   output: {
-    filename: 'app.js',
-    path: path.resolve(__dirname, 'static'),
+    path: distPath,
+    filename: 'scripts/[name].js',
+    publicPath: publicPath,
   },
 
   optimization: {
@@ -34,12 +45,6 @@ module.exports = {
         },
       },
     },
-  },
-
-  output: {
-    path: distPath,
-    filename: 'scripts/[name].js',
-    publicPath: publicPath,
   },
 
   module: {
@@ -69,11 +74,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new ESLintPlugin(),
     new RemoveEmptyScriptsPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-      Util: 'exports?Util!bootstrap/js/dist/util',
+    new PurgecssPlugin({
+      paths: glob.sync('templates/**/*',  { nodir: true }),
+      safelist: collectSafelist,
     }),
     new WebpackManifestPlugin({
       fileName: 'assets-manifest.json',
