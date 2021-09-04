@@ -8,7 +8,8 @@ use syntect::parsing::SyntaxSet;
 
 use crate::paste::Paste;
 use crate::state::State;
-use crate::template::{GetPasteTemplate, NotFoundTemplate};
+use crate::templates::get_paste::GetPasteTemplate;
+use crate::templates::not_found::NotFoundTemplate;
 use std::path::Path;
 
 const THEME: &str = "base16-eighties.dark";

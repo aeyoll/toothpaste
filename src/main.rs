@@ -7,12 +7,12 @@ mod database;
 mod paste;
 mod routes;
 mod state;
-mod template;
+mod templates;
 
 use cache::create_cache;
 use database::create_database_pool;
-use routes::download_paste::download_paste;
 use routes::create::create;
+use routes::download_paste::download_paste;
 use routes::get_paste::get_paste;
 use routes::index::index;
 use routes::new::new;

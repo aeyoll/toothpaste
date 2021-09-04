@@ -4,7 +4,7 @@ use tide::{Response, StatusCode};
 
 use crate::paste::Paste;
 use crate::state::State;
-use crate::template::NotFoundTemplate;
+use crate::templates::not_found::NotFoundTemplate;
 
 pub async fn download_paste(req: Request<State>) -> tide::Result<Response> {
     let id = req.param("id").unwrap();
