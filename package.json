@@ -5,7 +5,6 @@
     "lint:scripts": "eslint assets/scripts",
     "lint:styles": "stylelint \"assets/styles/**/*.{css,sass,scss}\"",
     "rmdist": "rimraf dist",
-    "sprite": "svg-sprite --config assets/sprite.json 'assets/images/svg/*.svg'",
     "start": "webpack --watch --config assets/config/webpack.dev.js"
   },
   "devDependencies": {

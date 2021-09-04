@@ -6,6 +6,7 @@ Requirements
 ---
 
 - [https://crates.io/crates/sqlx-cli](sqlx-cli): Database management
+- [https://yarnpkg.com/](yarn): Asset management
 
 Install
 ---
@@ -17,6 +18,13 @@ sqlx database create
 sqlx migrate run
 ```
 
+Build static assets:
+
+```sh
+yarn
+yarn run build
+```
+
 Development
 ---
 
@@ -24,4 +32,10 @@ For easier development, use [https://github.com/watchexec/cargo-watch](cargo-wat
 
 ```sh
 cargo watch -x 'run'
+```
+
+Auto-compile static assets:
+
+```sh
+yarn run start
 ```
