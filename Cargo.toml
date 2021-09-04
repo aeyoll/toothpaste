@@ -3,8 +3,6 @@ name = "toothpaste"
 version = "0.1.0"
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 askama = { version = "0.10", features = ["with-tide"]}
 askama_tide = "0.13.0"
@@ -22,3 +20,8 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 syntect = "4.6"
 tide = "0.16.0"
+
+[profile.release]
+lto = true
+opt-level = "s"
+codegen-units = 1
