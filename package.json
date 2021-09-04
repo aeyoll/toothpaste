@@ -30,5 +30,8 @@
     "webpack-cli": "^4.8.0",
     "webpack-manifest-plugin": "^4.0.2",
     "webpack-remove-empty-scripts": "^0.7.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.1.0"
   }
 }

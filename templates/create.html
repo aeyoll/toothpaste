@@ -7,16 +7,16 @@
 
 {% block body %}
 <form action="/paste/new" method="post">
-    <div class="form-group">
-        <label for="filename">Filename</label>
+    <div class="mb-3">
+        <label for="filename" class="form-label">Filename</label>
         <input type="text" name="filename" id="filename" class="form-control" required>
     </div>
 
-    <div class="form-group">
-        <label for="content">Content</label>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
         <textarea name="content" id="content" class="form-control" required rows="20"></textarea>
     </div>
 
-    <button type="submit" class="btn">Send</button>
+    <button type="submit" class="btn btn-primary">Send</button>
 </form>
 {% endblock %}
