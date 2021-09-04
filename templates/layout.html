@@ -7,7 +7,7 @@
     {% block head %}{% endblock %}
 
     <title>{% block title %} - Paste{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ crate::asset::get_asset_path("main.css") }}">
   </head>
 
   <body>

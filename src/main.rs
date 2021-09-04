@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate rbatis;
 
+mod asset;
 mod cache;
 mod database;
 mod paste;
