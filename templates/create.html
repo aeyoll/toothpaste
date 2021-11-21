@@ -18,6 +18,18 @@
     </div>
 
     <div class="mb-3">
+      <label for="expire_after" class="form-label">Expire:</label>
+      <select id="expire_after" name="expire_after" class="form-control">
+        <option value="1800">Delete after 30 minutes</option>
+        <option value="21600">Delete after 6 hours</option>
+        <option value="86400" selected="selected">Delete after 1 day</option>
+        <option value="604800">Delete after 1 week</option>
+        <option value="2592000">Delete after 1 month</option>
+        <option value="0">Keep paste forever</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
       <button type="submit" class="btn btn-primary">Create</button>
     </div>
   </form>
