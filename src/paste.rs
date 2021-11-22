@@ -10,4 +10,7 @@ pub struct Paste {
 
     // The number of seconds before deletion
     pub expire_after: Option<u32>,
+
+    // The expira time
+    pub expire_time: Option<NaiveDateTime>,
 }
