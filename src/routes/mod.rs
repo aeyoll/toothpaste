@@ -1,3 +1,4 @@
+pub mod cleanup;
 pub mod create;
 pub mod download_paste;
 pub mod get_paste;
