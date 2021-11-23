@@ -27,6 +27,12 @@ yarn
 yarn run build
 ```
 
+Finally, setup a cron every minute for paste expire cleanup:
+
+```sh
+* * * * * wget -q -O /dev/null "http(s)://your_host/paste/cleanup"
+```
+
 Development
 ---
 
