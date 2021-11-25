@@ -1,4 +1,5 @@
 use rbatis::crud::CRUD;
+use std::ffi::OsStr;
 use tide::Request;
 use tide::{Response, StatusCode};
 
@@ -34,7 +35,11 @@ pub async fn get_paste(req: Request<State>) -> tide::Result<Response> {
                 html_content = response.clone();
             } else {
                 let filename = &paste.filename.as_ref().unwrap();
-                let extension = Path::new(filename).extension().unwrap().to_str().unwrap();
+                let extension = Path::new(filename)
+                    .extension()
+                    .unwrap_or(OsStr::new("txt"))
+                    .to_str()
+                    .unwrap();
 
                 let s = &paste.content.unwrap();
                 let ss = SyntaxSet::load_defaults_newlines();
