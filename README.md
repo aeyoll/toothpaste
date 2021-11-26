@@ -27,6 +27,12 @@ yarn
 yarn run build
 ```
 
+Launch the http server:
+
+```sh
+toothpaste --ip 127.0.0.1 --port 8080 # default values
+```
+
 Finally, setup a cron every minute for paste expire cleanup:
 
 ```sh

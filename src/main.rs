@@ -18,6 +18,7 @@ use routes::get_paste::get_paste;
 use routes::index::index;
 use routes::new::new;
 use state::State;
+use structopt::StructOpt;
 
 #[async_std::main]
 async fn main() -> tide::Result<()> {
@@ -43,9 +44,20 @@ async fn main() -> tide::Result<()> {
     app.at("/paste/:id/download").get(download_paste);
     app.at("/static").serve_dir("static/")?;
 
-    let addr = "127.0.0.1:8080";
+    let args: Options = Options::from_args();
+    let addr = format!("{}:{}", &args.ip, args.port);
     println!("http server listen on http://{}", addr);
 
     app.listen(addr).await?;
     Ok(())
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(name = "toothpaste", about)]
+struct Options {
+    #[structopt(long, default_value = "127.0.0.1")]
+    ip: String,
+
+    #[structopt(long, default_value = "8080")]
+    port: u16,
 }
