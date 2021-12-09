@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file. See [conven
 #### Bug Fixes
 - prevent crash when creating a private paste - (5393ae6) - Jean-Philippe Bidegain
 - set default order in the homepage by create time - (25e23cb) - Jean-Philippe Bidegain
-#### Miscellaneous Chores
-- **(version)** 0.3.1 - (4b3a5c8) - Jean-Philippe Bidegain
 - - -
 
 ## 0.3.1 - 2021-12-09
