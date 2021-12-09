@@ -6,7 +6,10 @@ pub async fn index(req: Request<State>) -> tide::Result<Response> {
     let state = req.state();
     let pool = state.pool.lock().await;
 
-    let wrapper = pool.new_wrapper().order_by(false, &["id"]);
+    let wrapper = pool
+        .new_wrapper()
+        .eq("private", false)
+        .order_by(false, &["id"]);
     let pastes = match pool.fetch_list_by_wrapper(&wrapper).await {
         Ok(pastes) => pastes,
         Err(_err) => vec![],

@@ -1,0 +1,2 @@
+ALTER TABLE paste
+  ADD private BOOLEAN DEFAULT FALSE;
