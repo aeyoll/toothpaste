@@ -1,6 +1,7 @@
 use crate::paste::Paste;
 use crate::state::State;
 use chrono::{Duration, NaiveDateTime};
+use nanoid::nanoid;
 use rbatis::core::value::DateTimeNow;
 use rbatis::crud::CRUD;
 use tide::{Redirect, Request};
@@ -16,12 +17,12 @@ pub async fn new(mut req: Request<State>) -> tide::Result {
         paste.expire_time = Some(create_time + Duration::seconds(expire_after.into()));
     }
 
+    paste.id = Some(nanoid!(10));
     let state = req.state();
     let pool = state.pool.lock().await;
 
-    let result = pool.save(&paste, &[]).await;
-    let id = result.unwrap().last_insert_id.unwrap();
+    let _ = pool.save(&paste, &[]).await;
 
-    let location = format!("/paste/{}", id);
+    let location = format!("/paste/{}", paste.id.unwrap());
     Ok(Redirect::new(location).into())
 }

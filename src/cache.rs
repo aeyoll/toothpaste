@@ -6,11 +6,11 @@ use std::sync::Arc;
 use clru::{CLruCache, CLruCacheConfig, WeightScale};
 use fnv::FnvBuildHasher;
 
-pub type HtmlCache = Arc<Mutex<CLruCache<i64, String, FnvBuildHasher, StringScale>>>;
+pub type HtmlCache = Arc<Mutex<CLruCache<String, String, FnvBuildHasher, StringScale>>>;
 pub struct StringScale;
 
-impl WeightScale<i64, String> for StringScale {
-    fn weight(&self, _key: &i64, value: &String) -> usize {
+impl WeightScale<String, String> for StringScale {
+    fn weight(&self, _key: &String, value: &String) -> usize {
         value.len() + std::mem::size_of::<String>()
     }
 }

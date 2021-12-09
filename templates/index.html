@@ -8,7 +8,6 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">#</th>
         <th scope="col">Filename</th>
         <th scope="col"></th>
       </tr>
@@ -18,8 +17,7 @@
     {% for paste in pastes %}
       {% if paste.filename.is_some() %}
         <tr>
-          <th scope="row">#{{ paste.id.as_ref().unwrap() }}</th>
-          <th>{{ paste.filename.as_ref().unwrap() }}</th>
+          <th><a href="/paste/{{ paste.id.as_ref().unwrap() }}">{{ paste.filename.as_ref().unwrap() }}</a></th>
           <th><a href="/paste/{{ paste.id.as_ref().unwrap() }}">See</a></th>
         </tr>
       {% endif %}
