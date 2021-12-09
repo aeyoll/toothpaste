@@ -1,4 +1,16 @@
+pre_bump_hooks = [
+  "cargo test",
+  "cargo clippy",
+  "cargo fmt --all",
+  "cargo bump {{version}}",
+]
+
+post_bump_hooks = [
+  "git push",
+  "git push origin {{version}}",
+  "cargo package",
+  "cargo publish"
+]
+
 [changelog]
 path = "CHANGELOG.md"
-
-[commit_types]
