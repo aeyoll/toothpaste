@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.3.1 - 2021-12-09
+#### Miscellaneous Chores
+- run clippy - (4e75bd8) - Jean-Philippe Bidegain
+- add cog pre and post bump hooks - (7af4afd) - Jean-Philippe Bidegain
+- - -
+
 ## 0.3.0 - 2021-12-09
 #### Features
 - add a "private" field to the paste - (6326b7d) - Jean-Philippe Bidegain
