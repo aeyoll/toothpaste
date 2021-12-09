@@ -37,7 +37,7 @@ pub async fn get_paste(req: Request<State>) -> tide::Result<Response> {
                 let filename = &paste.filename.as_ref().unwrap();
                 let extension = Path::new(filename)
                     .extension()
-                    .unwrap_or(OsStr::new("txt"))
+                    .unwrap_or_else(|| OsStr::new("txt"))
                     .to_str()
                     .unwrap();
 
