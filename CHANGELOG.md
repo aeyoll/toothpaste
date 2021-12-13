@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.3.3 - 2021-12-13
+#### Features
+- add the "private" command line flag, to define if the paste form should check private or not (disabled by default) - (21c986a) - Jean-Philippe Bidegain
+- - -
+
 ## 0.3.2 - 2021-12-09
 #### Bug Fixes
 - prevent crash when creating a private paste - (5393ae6) - Jean-Philippe Bidegain
