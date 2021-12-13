@@ -7,4 +7,6 @@ pub struct State {
     pub cache: HtmlCache,
     /// The database pool
     pub pool: DatabasePool,
+    /// Are the paste created as private by default?
+    pub private: bool,
 }

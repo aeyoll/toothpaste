@@ -25,14 +25,24 @@ async fn main() -> tide::Result<()> {
     // Environment
     dotenv::dotenv().ok();
 
+    // Get arguments from command line
+    let args: Options = Options::from_args();
+
     // Database
     let pool = create_database_pool().await;
 
     // Cache
     let cache = create_cache();
 
+    // Should the new pastes be private by default?
+    let private = args.private;
+
     // State
-    let state = State { cache, pool };
+    let state = State {
+        cache,
+        pool,
+        private,
+    };
 
     let mut app = tide::with_state(state.clone());
 
@@ -44,7 +54,6 @@ async fn main() -> tide::Result<()> {
     app.at("/paste/:id/download").get(download_paste);
     app.at("/static").serve_dir("static/")?;
 
-    let args: Options = Options::from_args();
     let addr = format!("{}:{}", &args.ip, args.port);
     println!("http server listen on http://{}", addr);
 
@@ -60,4 +69,7 @@ struct Options {
 
     #[structopt(long, default_value = "8080")]
     port: u16,
+
+    #[structopt(long)]
+    private: bool,
 }
