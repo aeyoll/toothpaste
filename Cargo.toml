@@ -1,6 +1,6 @@
 [package]
 name = "toothpaste"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2018"
 description = "A pastebin written in Rust"
 license = "MIT"

@@ -2980,7 +2980,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "askama",
  "askama_tide",
