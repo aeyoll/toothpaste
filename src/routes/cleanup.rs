@@ -14,7 +14,7 @@ pub async fn cleanup(req: Request<State>) -> tide::Result<Response> {
         .new_wrapper()
         .gt("expire_after", 0)
         .lt("expire_time", now);
-    let _ = pool.remove_by_wrapper::<Paste>(&wrapper).await;
+    let _ = pool.remove_by_wrapper::<Paste>(wrapper).await;
 
     Ok("Cleanup finished".to_string().into())
 }
