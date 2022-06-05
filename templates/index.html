@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+  {% if pastes.len() > 0 %}
   <table class="table table-striped">
     <thead>
       <tr>
@@ -24,4 +25,9 @@
     {% endfor %}
     </tbody>
   </table>
+  {% else %}
+  <div class="alert alert-info">
+    There's no public paste (yet). <a href="/paste/create">Add one</a>.
+  </div>
+  {% endif %}
 {% endblock %}
