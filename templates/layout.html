@@ -7,7 +7,7 @@
     {% block head %}{% endblock %}
 
     <title>{% block title %} - Paste{% endblock %}</title>
-    <link rel="stylesheet" href="{{ crate::asset::get_asset_path("main.css") }}">
+    <link rel="stylesheet" href="{{ get_asset_path(path="main.css") }}">
   </head>
 
   <body>
@@ -43,7 +43,7 @@
       {% endblock %}
     </div>
 
-    <script src="{{ crate::asset::get_asset_path("vendors.js") }}"></script>
-    <script src="{{ crate::asset::get_asset_path("main.js") }}"></script>
+    <script src="{{ get_asset_path(path="vendors.js") }}"></script>
+    <script src="{{ get_asset_path(path="main.js") }}"></script>
   </body>
 </html>

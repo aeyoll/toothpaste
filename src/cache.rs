@@ -1,10 +1,8 @@
-use futures::lock::Mutex;
-
-use std::num::NonZeroUsize;
-use std::sync::Arc;
+use std::{num::NonZeroUsize, sync::Arc};
 
 use clru::{CLruCache, CLruCacheConfig, WeightScale};
 use fnv::FnvBuildHasher;
+use futures::lock::Mutex;
 
 pub type HtmlCache = Arc<Mutex<CLruCache<String, String, FnvBuildHasher, StringScale>>>;
 pub struct StringScale;

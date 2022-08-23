@@ -2,7 +2,6 @@
 
 {% block title %}
   New paste
-  {% call super() %}
 {% endblock %}
 
 {% block body %}
@@ -31,7 +30,7 @@
     </div>
 
     <div class="mb-3 form-check">
-      <input type="checkbox" name="private" id="private" class="form-check-input" value="1" {% if private %}checked="checked"{% endif %}>
+      <input type="checkbox" name="private" id="private" class="form-check-input" value="true" {% if private %}checked="checked"{% endif %}>
       <label for="private" class="form-check-label">Private</label>
       <div class="form-text">When private, the paste does not appear in the homepage</div>
     </div>

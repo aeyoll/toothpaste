@@ -1,20 +1,31 @@
-use crate::paste::Paste;
-use crate::state::State;
-use chrono::NaiveDateTime;
-use rbatis::core::value::DateTimeNow;
-use rbatis::crud::CRUD;
-use tide::{Request, Response};
+use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
+use chrono::{NaiveDateTime, Utc};
+use entity::paste;
+use paste::Entity as Paste;
+use sea_orm::{entity::prelude::*, DatabaseConnection, DeleteResult};
 
-pub async fn cleanup(req: Request<State>) -> tide::Result<Response> {
-    let state = req.state();
-    let pool = state.pool.lock().await;
+use crate::SharedState;
 
-    let now = NaiveDateTime::now();
-    let wrapper = pool
-        .new_wrapper()
-        .gt("expire_after", 0)
-        .lt("expire_time", now);
-    let _ = pool.remove_by_wrapper::<Paste>(wrapper).await;
+pub async fn cleanup(State(state): State<SharedState>) -> impl IntoResponse {
+    let db: &DatabaseConnection = &state.db;
 
-    Ok("Cleanup finished".to_string().into())
+    let now: NaiveDateTime = Utc::now().naive_utc();
+    let zero: i32 = 0;
+
+    let res: Result<DeleteResult, _> = Paste::delete_many()
+        .filter(paste::Column::ExpireAfter.gt(zero))
+        .filter(paste::Column::ExpireTime.lt(now))
+        .exec(db)
+        .await;
+
+    match res {
+        Ok(deleted_result) => (
+            StatusCode::OK,
+            Json(format!("{} paste cleaned up", deleted_result.rows_affected)),
+        ),
+        Err(..) => (
+            StatusCode::BAD_REQUEST,
+            Json("Failed to cleanup".to_string()),
+        ),
+    }
 }

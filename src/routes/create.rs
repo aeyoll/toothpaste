@@ -1,11 +1,24 @@
-use crate::{state::State, templates::create::CreateTemplate};
-use tide::{Request, Response};
+use axum::{
+    extract::State,
+    http::StatusCode,
+    response::{Html, IntoResponse},
+    Extension,
+};
+use tera::Tera;
 
-pub async fn create(req: Request<State>) -> tide::Result<Response> {
-    let state = req.state();
-    let response = CreateTemplate {
-        private: state.private,
-    }
-    .into();
-    Ok(response)
+use crate::SharedState;
+
+pub async fn create(
+    Extension(tera): Extension<Tera>,
+    State(state): State<SharedState>,
+) -> impl IntoResponse {
+    let mut ctx = tera::Context::new();
+    ctx.insert("private", &state.private);
+
+    let body = tera
+        .render("create.html", &ctx)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
+        .unwrap();
+
+    (StatusCode::OK, Html(body))
 }
