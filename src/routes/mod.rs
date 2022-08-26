@@ -1,5 +1,5 @@
 pub mod cleanup;
-pub mod create;
+pub mod create_paste;
 pub mod download_paste;
 pub mod get_paste;
 pub mod index;

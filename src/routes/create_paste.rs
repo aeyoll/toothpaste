@@ -8,7 +8,7 @@ use tera::Tera;
 
 use crate::SharedState;
 
-pub async fn create(
+pub async fn create_paste(
     Extension(tera): Extension<Tera>,
     State(state): State<SharedState>,
 ) -> impl IntoResponse {

@@ -24,8 +24,8 @@ use cache::create_cache;
 use database::create_database_pool;
 use migration::{Migrator, MigratorTrait};
 use routes::{
-    cleanup::cleanup, create::create, download_paste::download_paste, get_paste::get_paste,
-    index::index, new_paste::new_paste,
+    cleanup::cleanup, create_paste::create_paste, download_paste::download_paste,
+    get_paste::get_paste, index::index, new_paste::new_paste,
 };
 use serde_json::to_value;
 use structopt::StructOpt;
@@ -91,7 +91,7 @@ async fn main() {
     let app = Router::with_state(shared_state)
         .route("/", get(index))
         .route("/paste/cleanup", get(cleanup))
-        .route("/paste/create", get(create))
+        .route("/paste/create", get(create_paste))
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
         .route("/paste/:id/download", get(download_paste))
