@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-  {% if pastes.len() > 0 %}
+  {% if pastes %}
   <table class="table table-striped">
     <thead>
       <tr>
@@ -16,10 +16,10 @@
     <tbody>
 
     {% for paste in pastes %}
-      {% if paste.filename.is_some() %}
+      {% if paste.filename %}
         <tr>
-          <th><a href="/paste/{{ paste.id.as_ref().unwrap() }}">{{ paste.filename.as_ref().unwrap() }}</a></th>
-          <th><a href="/paste/{{ paste.id.as_ref().unwrap() }}">See</a></th>
+          <th><a href="/paste/{{ paste.id }}">{{ paste.filename }}</a></th>
+          <th><a href="/paste/{{ paste.id }}">See</a></th>
         </tr>
       {% endif %}
     {% endfor %}

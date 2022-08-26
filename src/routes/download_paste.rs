@@ -1,41 +1,47 @@
-use rbatis::crud::CRUD;
-use tide::Request;
-use tide::{Response, StatusCode};
+use axum::{
+    extract::{Path, State},
+    http::{header::CONTENT_DISPOSITION, HeaderMap, HeaderValue, StatusCode},
+    response::{Html, IntoResponse},
+    Extension,
+};
+use entity::paste;
+use paste::Entity as Paste;
+use sea_orm::entity::prelude::*;
+use tera::Tera;
 
-use crate::paste::Paste;
-use crate::state::State;
-use crate::templates::not_found::NotFoundTemplate;
+use crate::SharedState;
 
-pub async fn download_paste(req: Request<State>) -> tide::Result<Response> {
-    let id = req.param("id").unwrap();
+pub async fn download_paste(
+    Extension(tera): Extension<Tera>,
+    Path(id): Path<String>,
+    State(state): State<SharedState>,
+) -> impl IntoResponse {
+    let db = &state.db;
 
-    let state = req.state();
-    let pool = state.pool.lock().await;
-
-    let mut response: Response;
-
-    let paste: Option<Paste> = pool.fetch_by_column("id", &id.to_string()).await.unwrap();
+    let paste: Option<paste::Model> = Paste::find_by_id(id).one(db).await.unwrap();
 
     match paste {
         Some(paste) => {
-            let content = paste.content.unwrap();
-            response = Response::builder(200)
-                .body(content)
-                .header("Content-Transfer-Encoding", "Binary")
-                .header(
-                    "Content-disposition",
-                    format!("attachment; filename=\"{}\"", paste.filename.unwrap()),
-                )
-                .build();
+            let content_disposition = format!("attachment; filename=\"{}\"", paste.filename);
+            let mut headers = HeaderMap::new();
+            headers.insert(
+                CONTENT_DISPOSITION,
+                HeaderValue::from_str(&content_disposition).unwrap(),
+            );
+            let content = paste.content;
+
+            (StatusCode::OK, headers, content).into_response()
         }
         None => {
-            response = NotFoundTemplate {
-                message: "Paste not found",
-            }
-            .into();
-            response.set_status(StatusCode::NotFound);
+            let mut ctx = tera::Context::new();
+            ctx.insert("message", "Paste not found");
+
+            let body = tera
+                .render("404.html", &ctx)
+                .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
+                .unwrap();
+
+            (StatusCode::NOT_FOUND, Html(body)).into_response()
         }
     }
-
-    Ok(response)
 }

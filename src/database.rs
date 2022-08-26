@@ -1,14 +1,9 @@
-use futures::lock::Mutex;
-use rbatis::rbatis::Rbatis;
-use std::sync::Arc;
-
-pub type DatabasePool = Arc<Mutex<Rbatis>>;
+use sea_orm::{Database, DatabaseConnection};
 
 // Initializes the database pool
-pub async fn create_database_pool() -> DatabasePool {
+pub async fn create_database_pool() -> DatabaseConnection {
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL");
-    let rb = Rbatis::new();
-    rb.link(&database_url).await.unwrap();
+    let db: DatabaseConnection = Database::connect(database_url).await.unwrap();
 
-    Arc::new(Mutex::new(rb))
+    db
 }

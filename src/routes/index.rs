@@ -1,21 +1,35 @@
-use crate::{state::State, templates::index::IndexTemplate};
-use rbatis::crud::CRUD;
-use tide::{Request, Response};
+use axum::{
+    extract::State,
+    http::StatusCode,
+    response::{Html, IntoResponse},
+    Extension,
+};
+use entity::paste;
+use paste::Entity as Paste;
+use sea_orm::{entity::prelude::*, DatabaseConnection};
+use tera::Tera;
 
-pub async fn index(req: Request<State>) -> tide::Result<Response> {
-    let state = req.state();
-    let pool = state.pool.lock().await;
+use crate::SharedState;
 
-    let wrapper = pool
-        .new_wrapper()
-        .eq("private", false)
-        .order_by(false, &["create_time"]);
-    let pastes = match pool.fetch_list_by_wrapper(wrapper).await {
-        Ok(pastes) => pastes,
-        Err(_err) => vec![],
-    };
+pub async fn index(
+    Extension(tera): Extension<Tera>,
+    State(state): State<SharedState>,
+) -> impl IntoResponse {
+    let db: &DatabaseConnection = &state.db;
 
-    let response = IndexTemplate { pastes }.into();
+    let pastes: Vec<paste::Model> = Paste::find()
+        .filter(paste::Column::Private.eq(false))
+        .all(db)
+        .await
+        .unwrap();
 
-    Ok(response)
+    let mut ctx = tera::Context::new();
+    ctx.insert("pastes", &pastes);
+
+    let body = tera
+        .render("index.html", &ctx)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
+        .unwrap();
+
+    (StatusCode::OK, Html(body))
 }
