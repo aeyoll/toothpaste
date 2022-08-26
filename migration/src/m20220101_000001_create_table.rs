@@ -17,18 +17,18 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Paste::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Paste::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Paste::Id).string().not_null().primary_key())
                     .col(ColumnDef::new(Paste::Filename).string().not_null())
                     .col(ColumnDef::new(Paste::Content).string().not_null())
                     .col(ColumnDef::new(Paste::CreateTime).date_time().not_null())
                     .col(ColumnDef::new(Paste::ExpireAfter).big_integer())
                     .col(ColumnDef::new(Paste::ExpireTime).date_time())
-                    .col(ColumnDef::new(Paste::Private).boolean().not_null().default(false))
+                    .col(
+                        ColumnDef::new(Paste::Private)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .to_owned(),
             )
             .await
