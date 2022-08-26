@@ -9,6 +9,7 @@ use paste::Entity as Paste;
 use sea_orm::{entity::prelude::*, DatabaseConnection};
 use tera::Tera;
 
+use crate::template::render_or_internal_error;
 use crate::SharedState;
 
 pub async fn index(
@@ -26,10 +27,7 @@ pub async fn index(
     let mut ctx = tera::Context::new();
     ctx.insert("pastes", &pastes);
 
-    let body = tera
-        .render("index.html", &ctx)
-        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
-        .unwrap();
+    let body = render_or_internal_error("index.html", &ctx, &tera);
 
     (StatusCode::OK, Html(body))
 }

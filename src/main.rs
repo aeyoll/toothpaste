@@ -5,6 +5,7 @@ mod cache;
 mod database;
 mod routes;
 mod state;
+mod template;
 
 use std::{
     collections::HashMap,

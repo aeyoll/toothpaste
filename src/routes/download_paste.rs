@@ -9,6 +9,7 @@ use paste::Entity as Paste;
 use sea_orm::entity::prelude::*;
 use tera::Tera;
 
+use crate::template::render_or_internal_error;
 use crate::SharedState;
 
 pub async fn download_paste(
@@ -36,10 +37,7 @@ pub async fn download_paste(
             let mut ctx = tera::Context::new();
             ctx.insert("message", "Paste not found");
 
-            let body = tera
-                .render("404.html", &ctx)
-                .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
-                .unwrap();
+            let body = render_or_internal_error("404.html", &ctx, &tera);
 
             (StatusCode::NOT_FOUND, Html(body)).into_response()
         }

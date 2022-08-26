@@ -12,6 +12,7 @@ use sea_orm::entity::prelude::*;
 use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
 use tera::Tera;
 
+use crate::template::render_or_internal_error;
 use crate::SharedState;
 
 const THEME: &str = "base16-eighties.dark";
@@ -58,19 +59,13 @@ pub async fn get_paste(
         ctx.insert("filename", &paste.filename);
         ctx.insert("content", &html_content);
 
-        let body = tera
-            .render("get_paste.html", &ctx)
-            .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
-            .unwrap();
+        let body = render_or_internal_error("get_paste.html", &ctx, &tera);
         (StatusCode::OK, Html(body))
     } else {
         let mut ctx = tera::Context::new();
         ctx.insert("message", "Paste not found");
 
-        let body = tera
-            .render("404.html", &ctx)
-            .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Template error"))
-            .unwrap();
+        let body = render_or_internal_error("404.html", &ctx, &tera);
         (StatusCode::NOT_FOUND, Html(body))
     }
 }
