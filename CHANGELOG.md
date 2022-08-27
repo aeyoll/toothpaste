@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.4.0 - 2022-08-27
+#### Features
+- add an info message when there's no paste - (9ea2aaa) - aeyoll
+#### Miscellaneous Chores
+- update cog configuration - (1aca04b) - aeyoll
+- code styling - (a5b3c89) - aeyoll
+#### Refactoring
+- add a helper function to render a template - (950723c) - aeyoll
+- rename route create to create_paste - (9d7c507) - aeyoll
+- convert everything to axum - (e29f908) - aeyoll
+
+- - -
+
 ## 0.3.3 - 2021-12-13
 #### Features
 - add the "private" command line flag, to define if the paste form should check private or not (disabled by default) - (21c986a) - Jean-Philippe Bidegain
