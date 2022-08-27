@@ -1,16 +1,22 @@
+ignore_merge_commits = true
+branch_whitelist = []
 pre_bump_hooks = [
-  "cargo test",
-  "cargo clippy",
-  "cargo fmt --all",
-  "cargo bump {{version}}",
+  "cargo build --release",          # verify the project builds
+  "cargo set-version {{version}}",  # bump version in Cargo.toml
+  "cargo check --release",
+  "git add :/Cargo.lock",           # stage version bump in Cargo.lock
 ]
-
 post_bump_hooks = [
   "git push",
   "git push origin {{version}}",
-  "cargo package",
-  "cargo publish"
 ]
+
+[commit_types]
 
 [changelog]
 path = "CHANGELOG.md"
+authors = [
+  { username = "aeyoll", signature = "Jean-Philippe Bidegain" }
+]
+
+[bump_profiles]
