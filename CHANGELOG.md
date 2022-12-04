@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.4.1 - 2022-12-04
+#### Miscellaneous Chores
+- update Rust dependencies - (2fcf36b) - aeyoll
+- update js dependencies - (789f5c0) - aeyoll
+
+- - -
+
 ## 0.4.0 - 2022-08-27
 #### Features
 - add an info message when there's no paste - (9ea2aaa) - aeyoll
