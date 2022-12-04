@@ -1,6 +1,5 @@
 const { merge } = require('webpack-merge');
 const { default: ImageminPlugin } = require('imagemin-webpack-plugin');
-const imageminMozjpeg = require('imagemin-mozjpeg');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 

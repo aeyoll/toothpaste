@@ -9,7 +9,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const PurgecssPlugin = require('purgecss-webpack-plugin');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 
 const rootPath = process.cwd();
 
@@ -74,7 +74,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new ESLintPlugin(),
     new RemoveEmptyScriptsPlugin(),
-    new PurgecssPlugin({
+    new PurgeCSSPlugin({
       paths: glob.sync('templates/**/*',  { nodir: true }),
       safelist: collectSafelist,
     }),
@@ -84,7 +84,7 @@ module.exports = {
     }),
     new StyleLintPlugin({
       failOnError: false,
-      syntax: 'scss',
+      customSyntax: 'postcss-scss',
     }),
   ],
 
