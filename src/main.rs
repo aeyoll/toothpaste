@@ -32,7 +32,7 @@ use serde_json::to_value;
 use structopt::StructOpt;
 use tera::{Tera, Value};
 use tower::ServiceBuilder;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::{asset::get_asset_path, state::AppState};
@@ -89,17 +89,19 @@ async fn main() {
         },
     );
 
-    let app = Router::with_state(shared_state)
+    let serve_dir = ServeDir::new("static").not_found_service(ServeFile::new("static/index.html"));
+    let serve_dir = get_service(serve_dir).handle_error(handle_error);
+
+
+    let app = Router::new()
         .route("/", get(index))
         .route("/paste/cleanup", get(cleanup))
         .route("/paste/create", get(create_paste))
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
         .route("/paste/:id/download", get(download_paste))
-        .nest(
-            "/static",
-            get_service(ServeDir::new("static")).handle_error(handle_error),
-        )
+        .nest_service("/static", serve_dir.clone())
+        .with_state(shared_state)
         .layer(ServiceBuilder::new().layer(Extension(tera)));
 
     let ip = Ipv4Addr::from_str(&*args.ip).unwrap();
