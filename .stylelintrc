@@ -4,7 +4,6 @@
     "at-rule-no-unknown": null,
     "max-nesting-depth": 3,
     "no-empty-source": null,
-    "number-leading-zero": null,
     "order/properties-alphabetical-order": true
   },
   "plugins": [
