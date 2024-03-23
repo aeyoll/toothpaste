@@ -2,6 +2,7 @@ extern crate tera;
 
 mod asset;
 mod cache;
+mod cryptography;
 mod database;
 mod routes;
 mod state;

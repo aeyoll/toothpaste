@@ -1,3 +1,6 @@
+use crate::cryptography::Cryptography;
+use aes_gcm_siv::aead::{Aead};
+use aes_gcm_siv::{KeyInit};
 use axum::{
     extract::State,
     response::{IntoResponse, Redirect},
@@ -6,6 +9,7 @@ use axum::{
 use chrono::{Duration, NaiveDateTime, Utc};
 use entity::paste;
 use nanoid::nanoid;
+
 use sea_orm::{entity::prelude::*, ActiveValue};
 use serde::Deserialize;
 
@@ -28,10 +32,14 @@ pub async fn new_paste(
 
     let private: bool = payload.private.unwrap_or(false);
 
+    let cryptography = Cryptography::new();
+    let encrypted_content = cryptography.encrypt(payload.content);
+    let content = String::from_utf8(encrypted_content).unwrap();
+
     let mut new_paste = paste::ActiveModel {
         id: ActiveValue::Set(nanoid!(10)),
         filename: ActiveValue::Set(payload.filename),
-        content: ActiveValue::Set(payload.content),
+        content: ActiveValue::Set(content),
         create_time: ActiveValue::Set(now),
         private: ActiveValue::Set(private),
         ..Default::default()
@@ -50,6 +58,10 @@ pub async fn new_paste(
         .await
         .expect("Could not insert paste");
 
-    let location = format!("/paste/{}", paste.id);
+    let location = format!(
+        "/paste/{}#{}",
+        paste.id,
+        String::from_utf8(cryptography.nonce().to_vec()).unwrap()
+    );
     Redirect::to(location.as_ref())
 }
