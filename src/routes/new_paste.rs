@@ -41,7 +41,7 @@ pub async fn new_paste(
     let expire_after = payload.expire_after;
 
     if expire_after > 0 {
-        let expire_time = now + Duration::seconds(expire_after);
+        let expire_time = now + Duration::try_seconds(expire_after).unwrap();
         new_paste.expire_time = ActiveValue::Set(Some(expire_time));
     }
 

@@ -50,7 +50,7 @@ pub async fn get_paste(
             };
             let ts = ThemeSet::load_defaults();
 
-            html_content = highlighted_html_for_string(s, &ss, syntax, &ts.themes[THEME]);
+            html_content = highlighted_html_for_string(s, &ss, syntax, &ts.themes[THEME]).unwrap();
             let _ = cache.put_with_weight(cache_key.to_string(), html_content.clone());
         }
 

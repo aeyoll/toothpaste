@@ -9,15 +9,12 @@ mod template;
 
 use std::{
     collections::HashMap,
-    io,
     net::{Ipv4Addr, SocketAddr},
     str::FromStr,
     sync::Arc,
 };
 
 use axum::{
-    http::StatusCode,
-    response::IntoResponse,
     routing::{get, get_service, post},
     Extension, Router,
 };
@@ -31,7 +28,6 @@ use routes::{
 use serde_json::to_value;
 use structopt::StructOpt;
 use tera::{Tera, Value};
-use tower::ServiceBuilder;
 use tower_http::services::{ServeDir, ServeFile};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -90,8 +86,7 @@ async fn main() {
     );
 
     let serve_dir = ServeDir::new("static").not_found_service(ServeFile::new("static/index.html"));
-    let serve_dir = get_service(serve_dir).handle_error(handle_error);
-
+    let serve_dir = get_service(serve_dir);
 
     let app = Router::new()
         .route("/", get(index))
@@ -102,19 +97,14 @@ async fn main() {
         .route("/paste/:id/download", get(download_paste))
         .nest_service("/static", serve_dir.clone())
         .with_state(shared_state)
-        .layer(ServiceBuilder::new().layer(Extension(tera)));
+        .layer(Extension(tera));
 
-    let ip = Ipv4Addr::from_str(&*args.ip).unwrap();
+    let ip = Ipv4Addr::from_str(&args.ip).unwrap();
     let addr = SocketAddr::from((ip, args.port));
     tracing::debug!("Listening on {}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-}
 
-async fn handle_error(_err: io::Error) -> impl IntoResponse {
-    (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
 
 #[derive(Debug, StructOpt)]
