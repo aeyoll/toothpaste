@@ -1,6 +1,4 @@
 use crate::cryptography::Cryptography;
-use aes_gcm_siv::aead::{Aead};
-use aes_gcm_siv::{KeyInit};
 use axum::{
     extract::State,
     response::{IntoResponse, Redirect},
@@ -50,7 +48,7 @@ pub async fn new_paste(
         ..Default::default()
     };
 
-    // If expire after is present, we create the expire time
+    // If expire after is present, we create the expiry time
     let expire_after = payload.expire_after;
 
     if expire_after > 0 {
@@ -64,7 +62,7 @@ pub async fn new_paste(
         .expect("Could not insert paste");
 
     let location = format!(
-        "/paste/{}#{}-{}",
+        "/paste/{}?nonce={}&key={}",
         paste.id,
         URL_SAFE.encode(cryptography.nonce().to_vec()),
         URL_SAFE.encode(cryptography.key().to_vec()),

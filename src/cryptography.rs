@@ -28,6 +28,13 @@ impl Cryptography {
         }
     }
 
+    pub fn init(key: Key, nonce: Nonce) -> Self {
+        Self {
+            key,
+            nonce,
+        }
+    }
+
     pub fn key(&self) -> Key {
         self.key
     }
@@ -43,9 +50,9 @@ impl Cryptography {
         cipher_text
     }
 
-    pub fn decrypt(&self, key: Key, nonce: Nonce, cipher_text: String) -> Vec<u8> {
-        let cipher = Aes256GcmSiv::new(&key.into());
-        let plain_text = cipher.decrypt(&nonce, cipher_text.as_ref()).unwrap();
+    pub fn decrypt(&self, cipher_text: Vec<u8>) -> Vec<u8> {
+        let cipher = Aes256GcmSiv::new(&self.key.into());
+        let plain_text = cipher.decrypt(&self.nonce, cipher_text.as_ref()).unwrap();
 
         plain_text
     }
