@@ -99,49 +99,50 @@ pub async fn get_paste(
     State(state): State<SharedState>,
     query: Option<Query<CryptographyQuery>>,
 ) -> impl IntoResponse {
-    let mut cache: MutexGuard<
-        '_,
-        CLruCache<
-            String,
-            String,
-            std::hash::BuildHasherDefault<fnv::FnvHasher>,
-            crate::cache::StringScale,
-        >,
-    > = state.cache.lock().await;
     let db = &state.db;
-
     let paste: Option<paste::Model> = Paste::find_by_id(id).one(db).await.unwrap();
 
-    if paste.is_some() {
-        let paste = paste.unwrap();
+    match paste {
+        Some(paste) => {
+            let filename;
+            let content;
 
-        let filename;
-        let content;
-        if paste.private {
-            let Query(query) = query.unwrap_or_default();
-            let cryptography = initialize_cryptography(axum::extract::Query(query));
+            if paste.private {
+                let Query(query) = query.unwrap_or_default();
+                let cryptography = initialize_cryptography(axum::extract::Query(query));
 
-            filename = get_filename(&paste, &cryptography);
-            content = get_content(&paste, &cryptography);
-        } else {
-            filename = paste.filename;
-            content = paste.content;
+                filename = get_filename(&paste, &cryptography);
+                content = get_content(&paste, &cryptography);
+            } else {
+                filename = paste.filename;
+                content = paste.content;
+            }
+
+            let mut cache: MutexGuard<
+                '_,
+                CLruCache<
+                    String,
+                    String,
+                    std::hash::BuildHasherDefault<fnv::FnvHasher>,
+                    crate::cache::StringScale,
+                >,
+            > = state.cache.lock().await;
+            let html_content = get_html_content(&mut cache, &paste.id, content, &filename);
+
+            let mut ctx = tera::Context::new();
+            ctx.insert("id", &paste.id);
+            ctx.insert("filename", &filename);
+            ctx.insert("content", &html_content);
+
+            let body = render_or_internal_error("get_paste.html", &ctx, &tera);
+            (StatusCode::OK, Html(body))
         }
+        None => {
+            let mut ctx = tera::Context::new();
+            ctx.insert("message", "Paste not found");
 
-        let html_content = get_html_content(&mut cache, &paste.id, content, &filename);
-
-        let mut ctx = tera::Context::new();
-        ctx.insert("id", &paste.id);
-        ctx.insert("filename", &filename);
-        ctx.insert("content", &html_content);
-
-        let body = render_or_internal_error("get_paste.html", &ctx, &tera);
-        (StatusCode::OK, Html(body))
-    } else {
-        let mut ctx = tera::Context::new();
-        ctx.insert("message", "Paste not found");
-
-        let body = render_or_internal_error("404.html", &ctx, &tera);
-        (StatusCode::NOT_FOUND, Html(body))
+            let body = render_or_internal_error("404.html", &ctx, &tera);
+            (StatusCode::NOT_FOUND, Html(body))
+        }
     }
 }
