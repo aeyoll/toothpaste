@@ -64,8 +64,8 @@ pub async fn new_paste(
     let location = format!(
         "/paste/{}?nonce={}&key={}",
         paste.id,
-        URL_SAFE.encode(cryptography.nonce().to_vec()),
-        URL_SAFE.encode(cryptography.key().to_vec()),
+        URL_SAFE.encode(cryptography.nonce()),
+        URL_SAFE.encode(cryptography.key()),
     );
     Redirect::to(location.as_ref())
 }

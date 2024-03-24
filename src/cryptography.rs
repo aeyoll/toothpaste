@@ -11,7 +11,7 @@ pub fn random_key() -> Key {
 /// Generate a random nonce for AES-GCM.
 /// AES-GCM nonces are 12 bytes (96 bits)
 pub fn random_nonce() -> Nonce {
-    Aes256GcmSiv::generate_nonce(&mut OsRng).into()
+    Aes256GcmSiv::generate_nonce(&mut OsRng)
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

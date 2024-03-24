@@ -23,19 +23,13 @@ use crate::SharedState;
 const THEME: &str = "base16-eighties.dark";
 
 #[derive(Deserialize)]
+#[derive(Default)]
 pub struct CryptographyQuery {
     key: String,
     nonce: String,
 }
 
-impl Default for CryptographyQuery {
-    fn default() -> Self {
-        Self {
-            key: String::from(""),
-            nonce: String::from(""),
-        }
-    }
-}
+
 
 pub async fn get_paste(
     Extension(tera): Extension<Tera>,
@@ -58,8 +52,8 @@ pub async fn get_paste(
         let base64_nonce = query.nonce;
 
         // Decode base64 data
-        let b_key = URL_SAFE.decode(&base64_key).unwrap();
-        let b_nonce = URL_SAFE.decode(&base64_nonce).unwrap();
+        let b_key = URL_SAFE.decode(base64_key).unwrap();
+        let b_nonce = URL_SAFE.decode(base64_nonce).unwrap();
 
         let key: Key = b_key.as_slice().try_into().unwrap(); // Convert &[u8] to [u8; 32]
         let nonce = *Nonce::from_slice(b_nonce.as_slice());
