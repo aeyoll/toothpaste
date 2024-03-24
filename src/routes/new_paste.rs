@@ -29,15 +29,19 @@ pub async fn new_paste(
 ) -> impl IntoResponse {
     let now: NaiveDateTime = Utc::now().naive_utc();
 
+    let mut filename = payload.filename;
+    let mut content = payload.content;
     let private: bool = payload.private.unwrap_or(false);
 
     let cryptography = Cryptography::new();
 
-    let encrypted_filename = cryptography.encrypt(payload.filename);
-    let filename = URL_SAFE.encode(encrypted_filename);
+    if private {
+        let encrypted_filename = cryptography.encrypt(filename);
+        filename = URL_SAFE.encode(encrypted_filename);
 
-    let encrypted_content = cryptography.encrypt(payload.content);
-    let content = URL_SAFE.encode(encrypted_content);
+        let encrypted_content = cryptography.encrypt(content);
+        content = URL_SAFE.encode(encrypted_content);
+    }
 
     let mut new_paste = paste::ActiveModel {
         id: ActiveValue::Set(nanoid!(10)),
