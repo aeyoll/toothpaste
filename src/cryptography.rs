@@ -29,10 +29,7 @@ impl Cryptography {
     }
 
     pub fn init(key: Key, nonce: Nonce) -> Self {
-        Self {
-            key,
-            nonce,
-        }
+        Self { key, nonce }
     }
 
     pub fn key(&self) -> Key {

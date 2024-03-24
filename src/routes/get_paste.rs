@@ -1,13 +1,14 @@
+use aes_gcm_siv::Nonce;
 use std::{ffi::OsStr, path::Path as StdPath};
-use aes_gcm_siv::{Nonce};
 
+use crate::cryptography::{Cryptography, Key};
+use axum::extract::Query;
 use axum::{
     extract::{Path, State},
     http::StatusCode,
     response::{Html, IntoResponse},
     Extension,
 };
-use axum::extract::Query;
 use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 use entity::paste;
 use paste::Entity as Paste;
@@ -15,7 +16,6 @@ use sea_orm::entity::prelude::*;
 use serde::Deserialize;
 use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
 use tera::Tera;
-use crate::cryptography::{Cryptography, Key};
 
 use crate::template::render_or_internal_error;
 use crate::SharedState;
@@ -68,7 +68,7 @@ pub async fn get_paste(
 
         // Decode filename
         let base64_filename = &paste.filename;
-        let encoded_filename= URL_SAFE.decode(base64_filename).unwrap();
+        let encoded_filename = URL_SAFE.decode(base64_filename).unwrap();
         let filename = String::from_utf8(cryptography.decrypt(encoded_filename)).unwrap();
 
         let html_content;
@@ -84,7 +84,7 @@ pub async fn get_paste(
                 .unwrap();
 
             let base64_content = &paste.content;
-            let encoded_content= URL_SAFE.decode(base64_content).unwrap();
+            let encoded_content = URL_SAFE.decode(base64_content).unwrap();
 
             let s = &String::from_utf8(cryptography.decrypt(encoded_content)).unwrap();
             let ss = SyntaxSet::load_defaults_newlines();
