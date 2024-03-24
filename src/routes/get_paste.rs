@@ -33,8 +33,8 @@ pub struct CryptographyQuery {
 fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
     let base64_key = &query.key;
     let base64_nonce = &query.nonce;
-    let b_key = URL_SAFE.decode(&base64_key).unwrap();
-    let b_nonce = URL_SAFE.decode(&base64_nonce).unwrap();
+    let b_key = URL_SAFE.decode(base64_key).unwrap();
+    let b_nonce = URL_SAFE.decode(base64_nonce).unwrap();
     let key: Key = b_key.as_slice().try_into().unwrap();
     let nonce = *Nonce::from_slice(b_nonce.as_slice());
 
@@ -43,8 +43,8 @@ fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
 
 fn decode(content: &String, cryptography: &Cryptography) -> String {
     let encoded_string = URL_SAFE.decode(content).unwrap();
-    let string = String::from_utf8(cryptography.decrypt(encoded_string)).unwrap();
-    string
+
+    String::from_utf8(cryptography.decrypt(encoded_string)).unwrap()
 }
 
 fn get_filename(paste: &paste::Model, cryptography: &Cryptography) -> String {
