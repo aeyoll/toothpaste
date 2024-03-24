@@ -1,7 +1,5 @@
-use aes_gcm_siv::aead::rand_core::RngCore;
 use aes_gcm_siv::aead::{Aead, OsRng};
-use aes_gcm_siv::{Aes256GcmSiv, KeyInit, Nonce};
-use rand::thread_rng;
+use aes_gcm_siv::{AeadCore, Aes256GcmSiv, KeyInit, Nonce};
 
 pub type Key = [u8; 32];
 
@@ -13,9 +11,7 @@ pub fn random_key() -> Key {
 /// Generate a random nonce for AES-GCM.
 /// AES-GCM nonces are 12 bytes (96 bits)
 pub fn random_nonce() -> Nonce {
-    let mut nonce = Nonce::default();
-    thread_rng().fill_bytes(&mut nonce[0..12]);
-    nonce
+    Aes256GcmSiv::generate_nonce(&mut OsRng).into()
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

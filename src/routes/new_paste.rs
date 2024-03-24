@@ -6,6 +6,7 @@ use axum::{
     response::{IntoResponse, Redirect},
     Form,
 };
+use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 use chrono::{Duration, NaiveDateTime, Utc};
 use entity::paste;
 use nanoid::nanoid;
@@ -34,7 +35,7 @@ pub async fn new_paste(
 
     let cryptography = Cryptography::new();
     let encrypted_content = cryptography.encrypt(payload.content);
-    let content = String::from_utf8(encrypted_content).unwrap();
+    let content = URL_SAFE.encode(encrypted_content);
 
     let mut new_paste = paste::ActiveModel {
         id: ActiveValue::Set(nanoid!(10)),
@@ -59,9 +60,10 @@ pub async fn new_paste(
         .expect("Could not insert paste");
 
     let location = format!(
-        "/paste/{}#{}",
+        "/paste/{}#{}-{}",
         paste.id,
-        String::from_utf8(cryptography.nonce().to_vec()).unwrap()
+        URL_SAFE.encode(cryptography.nonce().to_vec()),
+        URL_SAFE.encode(cryptography.key().to_vec()),
     );
     Redirect::to(location.as_ref())
 }
