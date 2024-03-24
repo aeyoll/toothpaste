@@ -1,4 +1,6 @@
 use aes_gcm_siv::Nonce;
+use clru::CLruCache;
+use futures::lock::MutexGuard;
 use std::{ffi::OsStr, path::Path as StdPath};
 
 use crate::cryptography::{Cryptography, Key};
@@ -22,14 +24,74 @@ use crate::SharedState;
 
 const THEME: &str = "base16-eighties.dark";
 
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Deserialize, Default)]
 pub struct CryptographyQuery {
     key: String,
     nonce: String,
 }
 
+fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
+    let base64_key = &query.key;
+    let base64_nonce = &query.nonce;
+    let b_key = URL_SAFE.decode(&base64_key).unwrap();
+    let b_nonce = URL_SAFE.decode(&base64_nonce).unwrap();
+    let key: Key = b_key.as_slice().try_into().unwrap();
+    let nonce = *Nonce::from_slice(b_nonce.as_slice());
 
+    Cryptography::init(key, nonce)
+}
+
+fn decode(content: &String, cryptography: &Cryptography) -> String {
+    let encoded_string = URL_SAFE.decode(content).unwrap();
+    let string = String::from_utf8(cryptography.decrypt(encoded_string)).unwrap();
+    string
+}
+
+fn get_filename(paste: &paste::Model, cryptography: &Cryptography) -> String {
+    decode(&paste.filename, cryptography)
+}
+
+fn get_content(paste: &paste::Model, cryptography: &Cryptography) -> String {
+    decode(&paste.content, cryptography)
+}
+
+fn get_html_content(
+    cache: &mut MutexGuard<
+        '_,
+        CLruCache<
+            String,
+            String,
+            std::hash::BuildHasherDefault<fnv::FnvHasher>,
+            crate::cache::StringScale,
+        >,
+    >,
+    cache_key: &str,
+    s: String,
+    filename: &str,
+) -> String {
+    if let Some(response) = cache.get(cache_key) {
+        response.clone()
+    } else {
+        // Get the extension from the filename
+        let extension = StdPath::new(&filename)
+            .extension()
+            .unwrap_or_else(|| OsStr::new("txt"))
+            .to_str()
+            .unwrap();
+
+        let ss = SyntaxSet::load_defaults_newlines();
+        let syntax = match ss.find_syntax_by_extension(extension) {
+            Some(syntax) => syntax,
+            None => ss.find_syntax_plain_text(),
+        };
+        let ts = ThemeSet::load_defaults();
+
+        let html_content = highlighted_html_for_string(&s, &ss, syntax, &ts.themes[THEME]).unwrap();
+        let _ = cache.put_with_weight(cache_key.to_string(), html_content.clone());
+
+        html_content
+    }
+}
 
 pub async fn get_paste(
     Extension(tera): Extension<Tera>,
@@ -37,60 +99,36 @@ pub async fn get_paste(
     State(state): State<SharedState>,
     query: Option<Query<CryptographyQuery>>,
 ) -> impl IntoResponse {
+    let mut cache: MutexGuard<
+        '_,
+        CLruCache<
+            String,
+            String,
+            std::hash::BuildHasherDefault<fnv::FnvHasher>,
+            crate::cache::StringScale,
+        >,
+    > = state.cache.lock().await;
     let db = &state.db;
-    let mut cache = state.cache.lock().await;
-    let cache_key = id.to_string();
 
     let paste: Option<paste::Model> = Paste::find_by_id(id).one(db).await.unwrap();
 
     if paste.is_some() {
         let paste = paste.unwrap();
 
-        // Fetch base64 key and nonce from query parameters
-        let Query(query) = query.unwrap_or_default();
-        let base64_key = query.key;
-        let base64_nonce = query.nonce;
+        let filename;
+        let content;
+        if paste.private {
+            let Query(query) = query.unwrap_or_default();
+            let cryptography = initialize_cryptography(axum::extract::Query(query));
 
-        // Decode base64 data
-        let b_key = URL_SAFE.decode(base64_key).unwrap();
-        let b_nonce = URL_SAFE.decode(base64_nonce).unwrap();
-
-        let key: Key = b_key.as_slice().try_into().unwrap(); // Convert &[u8] to [u8; 32]
-        let nonce = *Nonce::from_slice(b_nonce.as_slice());
-
-        let cryptography = Cryptography::init(key, nonce);
-
-        // Decode filename
-        let base64_filename = &paste.filename;
-        let encoded_filename = URL_SAFE.decode(base64_filename).unwrap();
-        let filename = String::from_utf8(cryptography.decrypt(encoded_filename)).unwrap();
-
-        let html_content;
-
-        if let Some(response) = cache.get(&cache_key) {
-            html_content = response.clone();
+            filename = get_filename(&paste, &cryptography);
+            content = get_content(&paste, &cryptography);
         } else {
-            // Get the extension from the filename
-            let extension = StdPath::new(&filename)
-                .extension()
-                .unwrap_or_else(|| OsStr::new("txt"))
-                .to_str()
-                .unwrap();
-
-            let base64_content = &paste.content;
-            let encoded_content = URL_SAFE.decode(base64_content).unwrap();
-
-            let s = &String::from_utf8(cryptography.decrypt(encoded_content)).unwrap();
-            let ss = SyntaxSet::load_defaults_newlines();
-            let syntax = match ss.find_syntax_by_extension(extension) {
-                Some(syntax) => syntax,
-                None => ss.find_syntax_plain_text(),
-            };
-            let ts = ThemeSet::load_defaults();
-
-            html_content = highlighted_html_for_string(s, &ss, syntax, &ts.themes[THEME]).unwrap();
-            let _ = cache.put_with_weight(cache_key.to_string(), html_content.clone());
+            filename = paste.filename;
+            content = paste.content;
         }
+
+        let html_content = get_html_content(&mut cache, &paste.id, content, &filename);
 
         let mut ctx = tera::Context::new();
         ctx.insert("id", &paste.id);
