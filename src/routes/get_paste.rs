@@ -30,6 +30,7 @@ pub struct CryptographyQuery {
     nonce: String,
 }
 
+/// Initialize cryptography parameters based on query parameters
 fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
     let base64_key = &query.key;
     let base64_nonce = &query.nonce;
@@ -41,20 +42,24 @@ fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
     Cryptography::init(key, nonce)
 }
 
+/// Decode encrypted content using cryptography parameters
 fn decode(content: &String, cryptography: &Cryptography) -> String {
     let encoded_string = URL_SAFE.decode(content).unwrap();
 
     String::from_utf8(cryptography.decrypt(encoded_string)).unwrap()
 }
 
+/// Decode filename of the paste
 fn get_filename(paste: &paste::Model, cryptography: &Cryptography) -> String {
     decode(&paste.filename, cryptography)
 }
 
+/// Decode content of the paste
 fn get_content(paste: &paste::Model, cryptography: &Cryptography) -> String {
     decode(&paste.content, cryptography)
 }
 
+/// Get HTML content of the paste, with syntax highlighting if possible
 fn get_html_content(
     cache: &mut MutexGuard<
         '_,
@@ -86,6 +91,7 @@ fn get_html_content(
         };
         let ts = ThemeSet::load_defaults();
 
+        // Highlight syntax and generate HTML content
         let html_content = highlighted_html_for_string(&s, &ss, syntax, &ts.themes[THEME]).unwrap();
         let _ = cache.put_with_weight(cache_key.to_string(), html_content.clone());
 
