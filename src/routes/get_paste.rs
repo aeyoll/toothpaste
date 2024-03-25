@@ -2,6 +2,7 @@ use aes_gcm_siv::Nonce;
 use clru::CLruCache;
 use futures::lock::MutexGuard;
 use std::{ffi::OsStr, path::Path as StdPath};
+use anyhow::Error;
 
 use crate::cryptography::{Cryptography, Key};
 use axum::extract::Query;
@@ -31,15 +32,15 @@ pub struct CryptographyQuery {
 }
 
 /// Initialize cryptography parameters based on query parameters
-fn initialize_cryptography(query: Query<CryptographyQuery>) -> Cryptography {
+fn initialize_cryptography(query: Query<CryptographyQuery>) -> Result<Cryptography, Error> {
     let base64_key = &query.key;
     let base64_nonce = &query.nonce;
-    let b_key = URL_SAFE.decode(base64_key).unwrap();
-    let b_nonce = URL_SAFE.decode(base64_nonce).unwrap();
+    let b_key = URL_SAFE.decode(base64_key)?;
+    let b_nonce = URL_SAFE.decode(base64_nonce)?;
     let key: Key = b_key.as_slice().try_into().unwrap();
     let nonce = *Nonce::from_slice(b_nonce.as_slice());
 
-    Cryptography::init(key, nonce)
+    Ok(Cryptography::init(key, nonce))
 }
 
 /// Decode encrypted content using cryptography parameters
@@ -115,10 +116,19 @@ pub async fn get_paste(
 
             if paste.private {
                 let Query(query) = query.unwrap_or_default();
-                let cryptography = initialize_cryptography(axum::extract::Query(query));
+                let cryptography = initialize_cryptography(Query(query));
 
-                filename = get_filename(&paste, &cryptography);
-                content = get_content(&paste, &cryptography);
+                if cryptography.is_ok() {
+                    let c = cryptography.unwrap();
+                    filename = get_filename(&paste, &c);
+                    content = get_content(&paste, &c);
+                } else {
+                    let mut ctx = tera::Context::new();
+                    ctx.insert("message", "Failed to decode paste");
+
+                    let body = render_or_internal_error("404.html", &ctx, &tera);
+                    return (StatusCode::NOT_FOUND, Html(body));
+                }
             } else {
                 filename = paste.filename;
                 content = paste.content;
