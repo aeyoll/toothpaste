@@ -1,11 +1,14 @@
+use crate::cryptography::Cryptography;
 use axum::{
     extract::State,
     response::{IntoResponse, Redirect},
     Form,
 };
+use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 use chrono::{Duration, NaiveDateTime, Utc};
 use entity::paste;
 use nanoid::nanoid;
+
 use sea_orm::{entity::prelude::*, ActiveValue};
 use serde::Deserialize;
 
@@ -26,18 +29,30 @@ pub async fn new_paste(
 ) -> impl IntoResponse {
     let now: NaiveDateTime = Utc::now().naive_utc();
 
+    let mut filename = payload.filename;
+    let mut content = payload.content;
     let private: bool = payload.private.unwrap_or(false);
+
+    let cryptography = Cryptography::new();
+
+    if private {
+        let encrypted_filename = cryptography.encrypt(filename);
+        filename = URL_SAFE.encode(encrypted_filename);
+
+        let encrypted_content = cryptography.encrypt(content);
+        content = URL_SAFE.encode(encrypted_content);
+    }
 
     let mut new_paste = paste::ActiveModel {
         id: ActiveValue::Set(nanoid!(10)),
-        filename: ActiveValue::Set(payload.filename),
-        content: ActiveValue::Set(payload.content),
+        filename: ActiveValue::Set(filename),
+        content: ActiveValue::Set(content),
         create_time: ActiveValue::Set(now),
         private: ActiveValue::Set(private),
         ..Default::default()
     };
 
-    // If expire after is present, we create the expire time
+    // If expire after is present, we create the expiry time
     let expire_after = payload.expire_after;
 
     if expire_after > 0 {
@@ -50,6 +65,11 @@ pub async fn new_paste(
         .await
         .expect("Could not insert paste");
 
-    let location = format!("/paste/{}", paste.id);
+    let location = format!(
+        "/paste/{}?nonce={}&key={}",
+        paste.id,
+        URL_SAFE.encode(cryptography.nonce()),
+        URL_SAFE.encode(cryptography.key()),
+    );
     Redirect::to(location.as_ref())
 }
