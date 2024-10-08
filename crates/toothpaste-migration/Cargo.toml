@@ -1,6 +1,6 @@
 [package]
-name = "migration"
-version = "0.4.1"
+name = "toothpaste-migration"
+version = { workspace = true }
 edition = "2021"
 publish = false
 

@@ -1,6 +1,6 @@
 [package]
-name = "entity"
-version = "0.4.1"
+name = "toothpaste-entity"
+version = { workspace = true }
 edition = "2021"
 publish = false
 
