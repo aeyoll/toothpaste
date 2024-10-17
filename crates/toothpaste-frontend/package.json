@@ -1,0 +1,13 @@
+{
+  "name": "toothpaste-frontend",
+  "version": "0.5.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "NODE_ENV=production tailwindcss -c ./tailwind.config.js -o ./tailwind.css --minify",
+    "watch": "tailwindcss --watch -c ./tailwind.config.js -o ./tailwind.css"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}
