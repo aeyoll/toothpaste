@@ -12,14 +12,14 @@ impl Component for PageNotFound {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <section class="hero is-danger is-bold is-large">
-                <div class="hero-body">
-                    <div class="container">
-                        <h1 class="title">
+            <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div class="py-12">
+                    <div class="text-center">
+                        <h1 class="text-4xl font-bold text-gray-900 mb-4">
                             { "Page not found" }
                         </h1>
-                        <h2 class="subtitle">
-                            { "Page page does not seem to exist" }
+                        <h2 class="text-xl text-gray-600">
+                            { "This page does not seem to exist" }
                         </h2>
                     </div>
                 </div>
