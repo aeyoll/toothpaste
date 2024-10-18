@@ -33,6 +33,7 @@ impl Component for App {
         html! {
             <div>
                 { self.view_nav(ctx.link()) }
+
                 <main>
                     <BrowserRouter>
                         <Switch<Route> render={switch} />
@@ -44,7 +45,7 @@ impl Component for App {
 }
 
 impl App {
-    fn view_nav(&self, _link: &Scope<Self>) -> Html {
+    fn view_nav(&self, link: &Scope<Self>) -> Html {
         html! {
             <nav class="bg-gray-800">
                 <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -55,7 +56,9 @@ impl App {
                             </div>
                             <div class="hidden sm:ml-6 sm:block">
                                 <div class="flex space-x-4">
-                                    <a href="#" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">{ "Homepage" }</a>
+                                    <Link<Route> classes={classes!("rounded-md", "bg-gray-900", "px-3", "py-2", "text-sm", "font-medium", "text-white")} to={Route::Home}>
+                                        { "Home" }
+                                    </Link<Route>>
                                     <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-white" aria-current="page">{ "New paste" }</a>
                                     <a href="https://github.com/aeyoll/toothpaste" target="_blank" rel="noopener" class="rounded-md px-3 py-2 text-sm font-medium text-white">{ "Github" }</a>
                                 </div>
