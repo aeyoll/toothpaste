@@ -3,6 +3,7 @@ use yew_router::prelude::*;
 
 use yew::html::Scope;
 
+use crate::components::route_link::RouteLink;
 use crate::pages::home::Home;
 use crate::pages::new_paste::NewPaste;
 use crate::pages::page_not_found::PageNotFound;
@@ -40,7 +41,7 @@ impl Component for App {
                     { self.view_nav(ctx.link()) }
 
                     <main>
-                            <Switch<Route> render={switch} />
+                        <Switch<Route> render={switch} />
                     </main>
                 </div>
             </BrowserRouter>
@@ -60,13 +61,13 @@ impl App {
                             </div>
                             <div class="hidden sm:ml-6 sm:block">
                                 <div class="flex space-x-4">
-                                    <Link<Route> classes={classes!("rounded-md", "bg-gray-900", "px-3", "py-2", "text-sm", "font-medium", "text-white")} to={Route::Home}>
+                                    <RouteLink to={Route::Home}>
                                         { "Home" }
-                                    </Link<Route>>
+                                    </RouteLink>
 
-                                    <Link<Route> classes={classes!("rounded-md", "px-3", "py-2", "text-sm", "font-medium", "text-white")} to={Route::NewPaste}>
+                                    <RouteLink to={Route::NewPaste}>
                                         { "New paste" }
-                                    </Link<Route>>
+                                    </RouteLink>
 
                                     <a href="https://github.com/aeyoll/toothpaste" target="_blank" rel="noopener" class="rounded-md px-3 py-2 text-sm font-medium text-white">{ "Github" }</a>
                                 </div>
