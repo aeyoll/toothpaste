@@ -1,12 +1,16 @@
-use yew::html::Scope;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
+use yew::html::Scope;
+
 use crate::pages::home::Home;
+use crate::pages::new_paste::NewPaste;
 use crate::pages::page_not_found::PageNotFound;
 
 #[derive(Routable, PartialEq, Eq, Clone, Debug)]
 pub enum Route {
+    #[at("/new")]
+    NewPaste,
     #[at("/")]
     Home,
     #[not_found]
@@ -31,15 +35,15 @@ impl Component for App {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div>
-                { self.view_nav(ctx.link()) }
+            <BrowserRouter>
+                <div>
+                    { self.view_nav(ctx.link()) }
 
-                <main>
-                    <BrowserRouter>
-                        <Switch<Route> render={switch} />
-                    </BrowserRouter>
-                </main>
-            </div>
+                    <main>
+                            <Switch<Route> render={switch} />
+                    </main>
+                </div>
+            </BrowserRouter>
         }
     }
 }
@@ -59,7 +63,11 @@ impl App {
                                     <Link<Route> classes={classes!("rounded-md", "bg-gray-900", "px-3", "py-2", "text-sm", "font-medium", "text-white")} to={Route::Home}>
                                         { "Home" }
                                     </Link<Route>>
-                                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-white" aria-current="page">{ "New paste" }</a>
+
+                                    <Link<Route> classes={classes!("rounded-md", "px-3", "py-2", "text-sm", "font-medium", "text-white")} to={Route::NewPaste}>
+                                        { "New paste" }
+                                    </Link<Route>>
+
                                     <a href="https://github.com/aeyoll/toothpaste" target="_blank" rel="noopener" class="rounded-md px-3 py-2 text-sm font-medium text-white">{ "Github" }</a>
                                 </div>
                             </div>
@@ -76,6 +84,9 @@ fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => {
             html! { <Home /> }
+        }
+        Route::NewPaste => {
+            html! { <NewPaste /> }
         }
         Route::NotFound => {
             html! { <PageNotFound /> }
