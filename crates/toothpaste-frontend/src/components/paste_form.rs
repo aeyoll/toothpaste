@@ -8,8 +8,14 @@ use gloo_net::http::Request;
 use indexmap::indexmap;
 use serde::{Deserialize, Serialize};
 use std::rc::Rc;
+use web_sys::window;
 use yew::prelude::*;
 use yew::{function_component, html, use_reducer, Html, Properties};
+
+#[derive(Deserialize)]
+pub struct PasteResponse {
+    id: String,
+}
 
 fn generate_key() -> [u8; 32] {
     let mut key = [0u8; 32];
@@ -155,7 +161,13 @@ pub fn paste_form(_props: &Props) -> Html {
                             .send()
                             .await
                             .unwrap();
-                        // Handle the response as needed
+
+                        // Get the id from the response
+                        let resp: PasteResponse = resp.json().await.unwrap();
+
+                        // Redirect to the paste page
+                        let location = format!("/paste/{}?key={}", resp.id, key_base64);
+                        window().unwrap().location().assign(location.as_str()).unwrap();
                     });
                 }
             }
