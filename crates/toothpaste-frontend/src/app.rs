@@ -19,19 +19,16 @@ pub enum Route {
     NotFound,
 }
 
-pub enum Msg {
-}
+pub enum Msg {}
 
-pub struct App {
-}
+pub struct App {}
 
 impl Component for App {
     type Message = Msg;
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
-        Self {
-        }
+        Self {}
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
@@ -52,7 +49,7 @@ impl Component for App {
 impl App {
     fn view_nav(&self, link: &Scope<Self>) -> Html {
         html! {
-            <nav class="bg-gray-800">
+            <nav class="bg-gray-800 mb-3">
                 <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <div class="relative flex h-16 items-center justify-between">
                         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
@@ -79,7 +76,6 @@ impl App {
         }
     }
 }
-
 
 fn switch(routes: Route) -> Html {
     match routes {

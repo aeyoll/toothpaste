@@ -3851,6 +3851,7 @@ dependencies = [
 name = "toothpaste-frontend"
 version = "0.0.0"
 dependencies = [
+ "indexmap",
  "yew",
  "yew-router",
 ]

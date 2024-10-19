@@ -13,3 +13,4 @@ categories = ["gui", "wasm", "web-programming"]
 [dependencies]
 yew = { version= "0.21.0", features=["csr"] }
 yew-router = "0.18.0"
+indexmap = "2.6.0"
