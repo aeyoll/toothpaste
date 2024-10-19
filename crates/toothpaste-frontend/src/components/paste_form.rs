@@ -1,9 +1,42 @@
+use aes_gcm::aead::consts::U12;
+use aes_gcm::aead::rand_core::RngCore;
+use aes_gcm::aead::{Aead, Nonce, OsRng};
+use aes_gcm::aes::Aes256;
+use aes_gcm::{AeadCore, Aes256Gcm, AesGcm, KeyInit};
+use base64::{engine::general_purpose, Engine as _};
 use gloo_net::http::Request;
 use indexmap::indexmap;
 use serde::{Deserialize, Serialize};
 use std::rc::Rc;
 use yew::prelude::*;
 use yew::{function_component, html, use_reducer, Html, Properties};
+
+fn generate_key() -> [u8; 32] {
+    let mut key = [0u8; 32];
+    OsRng.fill_bytes(&mut key);
+    key
+}
+
+fn generate_nonce() -> Nonce<AesGcm<Aes256, U12>> {
+    let nonce = Aes256Gcm::generate_nonce(&mut OsRng);
+    nonce
+}
+
+// Add this function for encryption
+fn encrypt(
+    data: &str,
+    nonce: &Nonce<AesGcm<Aes256, U12>>,
+    key: &[u8; 32],
+) -> Result<String, String> {
+    let cipher = Aes256Gcm::new(key.into());
+    let ciphertext = cipher
+        .encrypt(&nonce, data.as_bytes())
+        .map_err(|e| format!("Encryption error: {:?}", e))?;
+
+    let mut result = nonce.to_vec();
+    result.extend_from_slice(&ciphertext);
+    Ok(general_purpose::STANDARD_NO_PAD.encode(ciphertext))
+}
 
 #[derive(Properties, PartialEq)]
 pub struct Props {}
@@ -22,6 +55,7 @@ struct PasteState {
     filename: String,
     content: String,
     expire_after: String,
+    encryption_key: [u8; 32],
 }
 
 impl Default for PasteState {
@@ -30,6 +64,7 @@ impl Default for PasteState {
             filename: String::new(),
             content: String::new(),
             expire_after: "86400".to_string(),
+            encryption_key: generate_key(),
         }
     }
 }
@@ -56,6 +91,13 @@ impl Reducible for PasteState {
             PasteAction::Submit => Rc::new(self.as_ref().clone()),
         }
     }
+}
+
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
+struct EncryptedPasteState {
+    filename: String,
+    content: String,
+    expire_after: i64,
 }
 
 #[function_component(PasteForm)]
@@ -88,9 +130,27 @@ pub fn paste_form(_props: &Props) -> Html {
                 }
                 PasteAction::Submit => {
                     let paste_data = paste_data.clone();
+
+                    let nonce = generate_nonce();
+                    let encrypted_filename =
+                        encrypt(&paste_data.filename, &nonce, &paste_data.encryption_key).unwrap();
+                    let encrypted_content =
+                        encrypt(&paste_data.content, &nonce, &paste_data.encryption_key).unwrap();
+
+                    let key_base64 =
+                        general_purpose::STANDARD_NO_PAD.encode(paste_data.encryption_key);
+
+                    let encrypted_paste = EncryptedPasteState {
+                        filename: encrypted_filename,
+                        content: encrypted_content,
+                        expire_after: paste_data.expire_after.parse::<i64>().unwrap(),
+                    };
+
                     wasm_bindgen_futures::spawn_local(async move {
-                        let resp = Request::post("/path")
-                            .json(&*paste_data)
+                        let api_url: &'static str = env!("TOOTHPASTE_API_URL");
+                        let api_route = format!("{}/paste/new", api_url);
+                        let resp = Request::post(api_route.as_str())
+                            .json(&encrypted_paste)
                             .unwrap()
                             .send()
                             .await

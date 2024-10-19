@@ -1,13 +1,10 @@
-use axum::{
-    extract::State,
-    response::{IntoResponse, Redirect},
-    Form,
-};
+use axum::http::StatusCode;
+use axum::{extract::State, Json};
 use chrono::{Duration, NaiveDateTime, Utc};
 use entity::paste;
 use nanoid::nanoid;
 use sea_orm::{entity::prelude::*, ActiveValue};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::SharedState;
 
@@ -17,27 +14,29 @@ pub struct Payload {
     filename: String,
     content: String,
     expire_after: i64,
-    private: Option<bool>,
+}
+
+#[derive(Serialize)]
+pub struct PasteResponse {
+    id: String,
 }
 
 pub async fn new_paste(
     State(state): State<SharedState>,
-    Form(payload): Form<Payload>,
-) -> impl IntoResponse {
+    Json(payload): Json<Payload>,
+) -> Result<(StatusCode, Json<PasteResponse>), StatusCode> {
     let now: NaiveDateTime = Utc::now().naive_utc();
-
-    let private: bool = payload.private.unwrap_or(false);
 
     let mut new_paste = paste::ActiveModel {
         id: ActiveValue::Set(nanoid!(10)),
         filename: ActiveValue::Set(payload.filename),
         content: ActiveValue::Set(payload.content),
         create_time: ActiveValue::Set(now),
-        private: ActiveValue::Set(private),
+        private: ActiveValue::Set(true),
         ..Default::default()
     };
 
-    // If expire after is present, we create the expire time
+    // If expire after is present, we create the expiry time
     let expire_after = payload.expire_after;
 
     if expire_after > 0 {
@@ -50,6 +49,6 @@ pub async fn new_paste(
         .await
         .expect("Could not insert paste");
 
-    let location = format!("/paste/{}", paste.id);
-    Redirect::to(location.as_ref())
+    let response = PasteResponse { id: paste.id };
+    Ok((StatusCode::CREATED, Json(response)))
 }

@@ -5,15 +5,14 @@ mod state;
 mod template;
 
 use std::{
-    collections::HashMap,
     net::{Ipv4Addr, SocketAddr},
     str::FromStr,
     sync::Arc,
 };
 
 use axum::{
-    routing::{get, get_service, post},
-    Extension, Router,
+    routing::{get, post},
+    Router,
 };
 use cache::create_cache;
 use database::create_database_pool;
@@ -22,9 +21,8 @@ use routes::{
     cleanup::cleanup, create_paste::create_paste, download_paste::download_paste,
     get_paste::get_paste, index::index, new_paste::new_paste,
 };
-use serde_json::to_value;
 use structopt::StructOpt;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::cors::{Any, CorsLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::state::AppState;
@@ -68,6 +66,12 @@ async fn main() {
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
         .route("/paste/:id/download", get(download_paste))
+        .layer(
+            CorsLayer::new()
+                .allow_origin(Any)
+                .allow_methods(Any)
+                .allow_headers(Any),
+        )
         .with_state(shared_state);
 
     let ip = Ipv4Addr::from_str(&args.ip).unwrap();

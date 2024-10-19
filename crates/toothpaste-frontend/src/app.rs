@@ -47,7 +47,7 @@ impl Component for App {
 }
 
 impl App {
-    fn view_nav(&self, link: &Scope<Self>) -> Html {
+    fn view_nav(&self, _link: &Scope<Self>) -> Html {
         html! {
             <nav class="bg-gray-800 mb-3">
                 <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
