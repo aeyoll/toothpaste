@@ -43,24 +43,17 @@ impl Reducible for PasteState {
         match action {
             PasteAction::SetFilename(filename) => Rc::new(PasteState {
                 filename,
-                content: self.content.clone(),
-                expire_after: self.expire_after.clone(),
+                ..self.as_ref().clone()
             }),
             PasteAction::SetContent(content) => Rc::new(PasteState {
                 content,
-                filename: self.filename.clone(),
-                expire_after: self.expire_after.clone(),
+                ..self.as_ref().clone()
             }),
             PasteAction::SetExpireAfter(expire_after) => Rc::new(PasteState {
                 expire_after,
-                filename: self.filename.clone(),
-                content: self.content.clone(),
+                ..self.as_ref().clone()
             }),
-            PasteAction::Submit => Rc::new(PasteState {
-                expire_after: self.expire_after.clone(),
-                filename: self.filename.clone(),
-                content: self.content.clone(),
-            }),
+            PasteAction::Submit => Rc::new(self.as_ref().clone()),
         }
     }
 }
