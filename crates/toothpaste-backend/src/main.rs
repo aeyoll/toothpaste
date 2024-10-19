@@ -1,6 +1,3 @@
-extern crate tera;
-
-mod asset;
 mod cache;
 mod database;
 mod routes;
@@ -27,11 +24,10 @@ use routes::{
 };
 use serde_json::to_value;
 use structopt::StructOpt;
-use tera::{Tera, Value};
 use tower_http::services::{ServeDir, ServeFile};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{asset::get_asset_path, state::AppState};
+use crate::state::AppState;
 
 type SharedState = Arc<AppState>;
 
@@ -65,29 +61,6 @@ async fn main() {
     // State
     let shared_state = Arc::new(AppState { cache, db, private });
 
-    // Templates
-    let mut tera = Tera::new("templates/**/*.html").expect("Tera initialization failed");
-
-    tera.register_function(
-        "get_asset_path",
-        |args: &HashMap<String, Value>| -> tera::Result<Value> {
-            match args.get("path") {
-                Some(Value::String(path)) => {
-                    let res = get_asset_path(path);
-                    Ok(to_value(res).unwrap())
-                }
-                _ => {
-                    let res =
-                        "invalid function usage: get_asset_path(path=\"path/to/file\")".to_string();
-                    Ok(to_value(res).unwrap())
-                }
-            }
-        },
-    );
-
-    let serve_dir = ServeDir::new("static").not_found_service(ServeFile::new("static/index.html"));
-    let serve_dir = get_service(serve_dir);
-
     let app = Router::new()
         .route("/", get(index))
         .route("/paste/cleanup", get(cleanup))
@@ -95,9 +68,7 @@ async fn main() {
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
         .route("/paste/:id/download", get(download_paste))
-        .nest_service("/static", serve_dir.clone())
-        .with_state(shared_state)
-        .layer(Extension(tera));
+        .with_state(shared_state);
 
     let ip = Ipv4Addr::from_str(&args.ip).unwrap();
     let addr = SocketAddr::from((ip, args.port));
