@@ -6,10 +6,13 @@ use yew::html::Scope;
 use crate::components::route_link::RouteLink;
 use crate::pages::home::Home;
 use crate::pages::new_paste::NewPaste;
+use crate::pages::get_paste::GetPaste;
 use crate::pages::page_not_found::PageNotFound;
 
 #[derive(Routable, PartialEq, Eq, Clone, Debug)]
 pub enum Route {
+    #[at("/paste/:id")]
+    GetPaste { id: String },
     #[at("/new")]
     NewPaste,
     #[at("/")]
@@ -81,6 +84,9 @@ fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => {
             html! { <Home /> }
+        }
+        Route::GetPaste { id } => {
+            html! { <GetPaste id={id} /> }
         }
         Route::NewPaste => {
             html! { <NewPaste /> }

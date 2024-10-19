@@ -13,7 +13,7 @@ use yew::prelude::*;
 use yew::{function_component, html, use_reducer, Html, Properties};
 
 #[derive(Deserialize)]
-pub struct PasteResponse {
+pub struct PasteCreateResponse {
     id: String,
 }
 
@@ -163,7 +163,7 @@ pub fn paste_form(_props: &Props) -> Html {
                             .unwrap();
 
                         // Get the id from the response
-                        let resp: PasteResponse = resp.json().await.unwrap();
+                        let resp: PasteCreateResponse = resp.json().await.unwrap();
 
                         // Redirect to the paste page
                         let location = format!("/paste/{}?key={}", resp.id, key_base64);
