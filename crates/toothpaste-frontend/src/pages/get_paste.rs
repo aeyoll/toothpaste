@@ -1,7 +1,7 @@
-use aes_gcm::aead::{Aead, Nonce};
-use aes_gcm::{Aes256Gcm, AesGcm, KeyInit};
 use aes_gcm::aead::consts::U12;
+use aes_gcm::aead::{Aead, Nonce};
 use aes_gcm::aes::Aes256;
+use aes_gcm::{Aes256Gcm, AesGcm, KeyInit};
 use base64::{engine::general_purpose, Engine as _};
 use gloo_net::http::Request;
 use serde::Deserialize;
@@ -11,7 +11,8 @@ use yew::prelude::*;
 
 fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteResponse, String> {
     // Decode the base64 key
-    let key = general_purpose::STANDARD_NO_PAD.decode(key_base64)
+    let key = general_purpose::URL_SAFE_NO_PAD
+        .decode(key_base64)
         .map_err(|e| format!("Failed to decode key: {:?}", e))?;
 
     if key.len() != 32 {
@@ -29,14 +30,12 @@ fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteRespons
     // Decrypt content
     let content = decrypt_data(&cipher, &paste.content)?;
 
-    Ok(PasteResponse {
-        filename,
-        content,
-    })
+    Ok(PasteResponse { filename, content })
 }
 
 fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {
-    let decoded = general_purpose::STANDARD_NO_PAD.decode(data)
+    let decoded = general_purpose::URL_SAFE_NO_PAD
+        .decode(data)
         .map_err(|e| format!("Failed to decode data: {:?}", e))?;
 
     if decoded.len() < 12 {
@@ -44,16 +43,18 @@ fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {
     }
 
     let nonce = Nonce::<AesGcm<Aes256, U12>>::from_slice(&decoded[0..12]);
+    tracing::debug!("Nonce: {:?}", nonce);
     let ciphertext = &decoded[12..];
+    tracing::debug!("Ciphertext: {:?}", ciphertext);
 
-    let plaintext = cipher.decrypt(nonce, ciphertext)
+    let plaintext = cipher
+        .decrypt(nonce, ciphertext)
         .map_err(|e| format!("Decryption error: {:?}", e))?;
 
-    String::from_utf8(plaintext)
-        .map_err(|e| format!("UTF-8 decoding error: {:?}", e))
+    String::from_utf8(plaintext).map_err(|e| format!("UTF-8 decoding error: {:?}", e))
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct PasteResponse {
     filename: String,
     content: String,
@@ -83,7 +84,7 @@ impl Component for GetPaste {
 
     fn create(ctx: &Context<Self>) -> Self {
         let id = ctx.props().id.clone();
-        
+
         // Get the encryption key from the URL
         let window = window().unwrap();
         let search_params = window.location().search().unwrap();
@@ -95,14 +96,11 @@ impl Component for GetPaste {
         spawn_local(async move {
             let api_url: &'static str = env!("TOOTHPASTE_API_URL");
             let api_route = format!("{}/paste/{}", api_url, id);
-            let resp = Request::get(&api_route)
-                .send()
-                .await
-                .unwrap();
+            let resp = Request::get(&api_route).send().await.unwrap();
 
             if resp.ok() {
                 let paste_response: PasteResponse = resp.json().await.unwrap();
-                
+
                 // Decrypt the paste content
                 match decrypt_paste(&paste_response, &key_base64) {
                     Ok(decrypted_paste) => link.send_message(Msg::PasteLoaded(decrypted_paste)),
@@ -110,7 +108,7 @@ impl Component for GetPaste {
                 }
             }
         });
-        
+
         Self {
             id: "0".into(),
             filename: String::new(),
@@ -119,7 +117,7 @@ impl Component for GetPaste {
             error: None,
         }
     }
-    
+
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::PasteLoaded(paste) => {
@@ -139,14 +137,25 @@ impl Component for GetPaste {
     fn view(&self, _ctx: &Context<Self>) -> Html {
         if !self.loaded {
             html! {
-                <div>{"Loading..."}</div>
+                <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                    <h1 class="title">{ "Loading..." }</h1>
+                </section>
             }
         } else {
-            html! {
-                <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                    <h1 class="title">{ &self.filename }</h1>
-                    <pre>{ &self.content }</pre>
-                </section>
+            if let Some(error) = &self.error {
+                html! {
+                    <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                        <h1 class="title">{ "Error" }</h1>
+                        <div>{ error }</div>
+                    </section>
+                }
+            } else {
+                html! {
+                    <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                        <h1 class="title">{ &self.filename }</h1>
+                        <pre>{ &self.content }</pre>
+                    </section>
+                }
             }
         }
     }

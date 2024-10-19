@@ -1,9 +1,9 @@
-use std::{ffi::OsStr, path::Path as StdPath};
-
+use crate::routes::new_paste::PasteResponse;
+use crate::template::render_or_internal_error;
+use crate::SharedState;
 use axum::{
-    extract::{Path, State},
+    extract::{Json, Path, State},
     http::StatusCode,
-    response::{Html, IntoResponse},
     Extension,
 };
 use entity::paste;
@@ -12,26 +12,21 @@ use sea_orm::entity::prelude::*;
 use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
 use tera::Tera;
 
-use crate::template::render_or_internal_error;
-use crate::SharedState;
-
 const THEME: &str = "base16-eighties.dark";
 
 pub async fn get_paste(
-    Extension(tera): Extension<Tera>,
     Path(id): Path<String>,
     State(state): State<SharedState>,
-) -> impl IntoResponse {
+) -> Result<(StatusCode, Json<paste::Model>), StatusCode> {
     let db = &state.db;
-    let mut cache = state.cache.lock().await;
-    let cache_key = id.to_string();
 
     let paste: Option<paste::Model> = Paste::find_by_id(id).one(db).await.unwrap();
 
     if paste.is_some() {
         let paste = paste.unwrap();
-        let html_content;
+        // let html_content;
 
+        /*
         if let Some(response) = cache.get(&cache_key) {
             html_content = response.clone();
         } else {
@@ -59,13 +54,9 @@ pub async fn get_paste(
         ctx.insert("filename", &paste.filename);
         ctx.insert("content", &html_content);
 
-        let body = render_or_internal_error("get_paste.html", &ctx, &tera);
-        (StatusCode::OK, Html(body))
+        let body = render_or_internal_error("get_paste.html", &ctx, &tera);*/
+        Ok((StatusCode::OK, Json(paste)))
     } else {
-        let mut ctx = tera::Context::new();
-        ctx.insert("message", "Paste not found");
-
-        let body = render_or_internal_error("404.html", &ctx, &tera);
-        (StatusCode::NOT_FOUND, Html(body))
+        Err(StatusCode::NOT_FOUND)
     }
 }

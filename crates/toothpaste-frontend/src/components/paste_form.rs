@@ -36,12 +36,12 @@ fn encrypt(
 ) -> Result<String, String> {
     let cipher = Aes256Gcm::new(key.into());
     let ciphertext = cipher
-        .encrypt(&nonce, data.as_bytes())
+        .encrypt(nonce, data.as_bytes())
         .map_err(|e| format!("Encryption error: {:?}", e))?;
 
     let mut result = nonce.to_vec();
     result.extend_from_slice(&ciphertext);
-    Ok(general_purpose::STANDARD_NO_PAD.encode(ciphertext))
+    Ok(general_purpose::URL_SAFE_NO_PAD.encode(result))
 }
 
 #[derive(Properties, PartialEq)]
@@ -136,15 +136,15 @@ pub fn paste_form(_props: &Props) -> Html {
                 }
                 PasteAction::Submit => {
                     let paste_data = paste_data.clone();
-
                     let nonce = generate_nonce();
+
                     let encrypted_filename =
                         encrypt(&paste_data.filename, &nonce, &paste_data.encryption_key).unwrap();
                     let encrypted_content =
                         encrypt(&paste_data.content, &nonce, &paste_data.encryption_key).unwrap();
 
                     let key_base64 =
-                        general_purpose::STANDARD_NO_PAD.encode(paste_data.encryption_key);
+                        general_purpose::URL_SAFE_NO_PAD.encode(paste_data.encryption_key);
 
                     let encrypted_paste = EncryptedPasteState {
                         filename: encrypted_filename,
@@ -167,7 +167,11 @@ pub fn paste_form(_props: &Props) -> Html {
 
                         // Redirect to the paste page
                         let location = format!("/paste/{}?key={}", resp.id, key_base64);
-                        window().unwrap().location().assign(location.as_str()).unwrap();
+                        window()
+                            .unwrap()
+                            .location()
+                            .assign(location.as_str())
+                            .unwrap();
                     });
                 }
             }

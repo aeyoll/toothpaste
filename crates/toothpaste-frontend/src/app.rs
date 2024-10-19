@@ -4,9 +4,9 @@ use yew_router::prelude::*;
 use yew::html::Scope;
 
 use crate::components::route_link::RouteLink;
+use crate::pages::get_paste::GetPaste;
 use crate::pages::home::Home;
 use crate::pages::new_paste::NewPaste;
-use crate::pages::get_paste::GetPaste;
 use crate::pages::page_not_found::PageNotFound;
 
 #[derive(Routable, PartialEq, Eq, Clone, Debug)]
