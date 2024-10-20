@@ -16,7 +16,7 @@ use axum::{
 use database::create_database_pool;
 use migration::{Migrator, MigratorTrait};
 use routes::{
-    cleanup::cleanup, create_paste::create_paste, get_paste::get_paste, new_paste::new_paste,
+    cleanup::cleanup, get_paste::get_paste, new_paste::new_paste,
 };
 use structopt::StructOpt;
 use tower_http::cors::{Any, CorsLayer};
@@ -55,7 +55,6 @@ async fn main() {
 
     let app = Router::new()
         .route("/paste/cleanup", get(cleanup))
-        .route("/paste/create", get(create_paste))
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
         .layer(
