@@ -18,7 +18,7 @@ impl Component for Home {
                 <h1 class="title">{ "Toothpaste is a pastebin written in Rust." }</h1>
                 <p class="mb-6">{ "It's a simple and secure pastebin." }</p>
                 <p class="mb-6">{ "It's open source and available on GitHub." }</p>
-                <p class="mb-6">{ "It uses client side encryption to protect your pastes." }</p>
+                <p class="mb-6">{ "It uses client side encryption." }</p>
                 <div class="mb-6">
                     <Link<Route> classes="btn btn-primary" to={Route::NewPaste}>
                         { "Create Paste" }
