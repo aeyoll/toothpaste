@@ -19,7 +19,7 @@ use database::create_database_pool;
 use migration::{Migrator, MigratorTrait};
 use routes::{
     cleanup::cleanup, create_paste::create_paste, download_paste::download_paste,
-    get_paste::get_paste, index::index, new_paste::new_paste,
+    get_paste::get_paste, new_paste::new_paste,
 };
 use structopt::StructOpt;
 use tower_http::cors::{Any, CorsLayer};
@@ -60,7 +60,6 @@ async fn main() {
     let shared_state = Arc::new(AppState { cache, db, private });
 
     let app = Router::new()
-        .route("/", get(index))
         .route("/paste/cleanup", get(cleanup))
         .route("/paste/create", get(create_paste))
         .route("/paste/new", post(new_paste))
