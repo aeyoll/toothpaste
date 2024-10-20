@@ -10,7 +10,8 @@ use std::path::Path as StdPath;
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
 use syntect::parsing::SyntaxSet;
-use wasm_bindgen_futures::spawn_local;
+use wasm_bindgen_futures::wasm_bindgen::JsCast;
+use wasm_bindgen_futures::{js_sys, spawn_local};
 use web_sys::window;
 use yew::prelude::*;
 
@@ -80,6 +81,8 @@ pub struct GetPaste {
 pub enum Msg {
     PasteLoaded(PasteResponse),
     DecryptionError(String),
+    CopyToClipboard,
+    DownloadFile,
 }
 
 impl Component for GetPaste {
@@ -135,10 +138,18 @@ impl Component for GetPaste {
                 self.loaded = true;
                 true
             }
+            Msg::CopyToClipboard => {
+                self.copy_to_clipboard();
+                false
+            }
+            Msg::DownloadFile => {
+                self.download_file();
+                false
+            }
         }
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         if !self.loaded {
             html! {
                 <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -153,9 +164,24 @@ impl Component for GetPaste {
                 </section>
             }
         } else {
+            let link = ctx.link();
             html! {
                 <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <h1 class="title">{ &self.filename }</h1>
+                    <div class="mb-4">
+                        <button
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                            onclick={link.callback(|_| Msg::CopyToClipboard)}
+                        >
+                            { "Copy to Clipboard" }
+                        </button>
+                        <button
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            onclick={link.callback(|_| Msg::DownloadFile)}
+                        >
+                            { "Download File" }
+                        </button>
+                    </div>
                     {self.highlight_content(&self.filename, &self.content)}
                 </section>
             }
@@ -182,5 +208,32 @@ impl GetPaste {
             .unwrap_or_else(|_| content.to_string());
 
         Html::from_html_unchecked(AttrValue::from(html))
+    }
+
+    fn copy_to_clipboard(&self) {
+        let window = window().unwrap();
+        let navigator = window.navigator();
+        let clipboard = navigator.clipboard();
+        let _ = clipboard.write_text(&self.content);
+    }
+
+    fn download_file(&self) {
+        let window = window().unwrap();
+        let document = window.document().unwrap();
+        let blob =
+            web_sys::Blob::new_with_str_sequence(&js_sys::Array::of1(&self.content.clone().into()))
+                .unwrap();
+        let url = web_sys::Url::create_object_url_with_blob(&blob).unwrap();
+
+        let a = document.create_element("a").unwrap();
+        a.set_attribute("href", &url).unwrap();
+        a.set_attribute("download", &self.filename).unwrap();
+        a.set_attribute("style", "display: none").unwrap();
+
+        document.body().unwrap().append_child(&a).unwrap();
+        a.dyn_ref::<web_sys::HtmlElement>().unwrap().click();
+        document.body().unwrap().remove_child(&a).unwrap();
+
+        web_sys::Url::revoke_object_url(&url).unwrap();
     }
 }
