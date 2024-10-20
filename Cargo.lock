@@ -3988,12 +3988,11 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-frontend"
-version = "0.0.0"
+version = "0.5.0"
 dependencies = [
  "aes-gcm",
  "base64 0.22.1",
  "gloo-net 0.6.0",
- "gloo-utils 0.2.0",
  "indexmap",
  "serde",
  "serde_json",

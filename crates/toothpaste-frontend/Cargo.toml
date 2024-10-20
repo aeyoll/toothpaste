@@ -8,12 +8,12 @@ repository = "https://github.com/yewstack/yew-trunk-minimal-template"
 license = "MIT OR Apache-2.0"
 keywords = ["yew", "trunk"]
 categories = ["gui", "wasm", "web-programming"]
+version = { workspace = true }
 
 [dependencies]
 aes-gcm = "0.10.1"
 base64 = "0.22.1"
 gloo-net = "0.6.0"
-gloo-utils = "0.2.0"
 indexmap = "2.6.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.128"
@@ -22,9 +22,3 @@ wasm-bindgen-futures = "0.4"
 web-sys = "0.3.72"
 yew = { version= "0.21.0", features=["csr"] }
 yew-router = "0.18.0"
-
-[profile.release]
-panic = 'abort'
-codegen-units = 1
-opt-level = 'z'
-lto = true

@@ -18,6 +18,8 @@ toothpaste-backend = { path = "./crates/toothpaste-backend" }
 toothpaste-frontend = { path = "./crates/toothpaste-frontend" }
 
 [profile.release]
+panic = 'abort'
+codegen-units = 1
+opt-level = 'z'
 lto = true
 strip = true
-opt-level = "z"
