@@ -25,9 +25,6 @@ type SharedState = Arc<AppState>;
 
 #[tokio::main]
 async fn main() {
-    // Environment
-    dotenv::dotenv().ok();
-
     // Logger
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new(

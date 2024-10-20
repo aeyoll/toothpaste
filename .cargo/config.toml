@@ -1,3 +1,4 @@
 [env]
+DATABASE_URL = "sqlite://sqlite.db"
 TOOTHPASTE_LOG_LEVEL = "info"
 TOOTHPASTE_API_URL = "http://127.0.0.1:8000"
