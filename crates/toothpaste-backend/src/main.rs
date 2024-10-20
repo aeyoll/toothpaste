@@ -1,4 +1,3 @@
-mod cache;
 mod database;
 mod routes;
 mod state;
@@ -14,12 +13,10 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use cache::create_cache;
 use database::create_database_pool;
 use migration::{Migrator, MigratorTrait};
 use routes::{
-    cleanup::cleanup, create_paste::create_paste, download_paste::download_paste,
-    get_paste::get_paste, new_paste::new_paste,
+    cleanup::cleanup, create_paste::create_paste, get_paste::get_paste, new_paste::new_paste,
 };
 use structopt::StructOpt;
 use tower_http::cors::{Any, CorsLayer};
@@ -50,21 +47,17 @@ async fn main() {
     let db = create_database_pool().await;
     Migrator::up(&db, None).await.unwrap();
 
-    // Cache
-    let cache = create_cache();
-
     // Should the new pastes be private by default?
     let private = args.private;
 
     // State
-    let shared_state = Arc::new(AppState { cache, db, private });
+    let shared_state = Arc::new(AppState { db, private });
 
     let app = Router::new()
         .route("/paste/cleanup", get(cleanup))
         .route("/paste/create", get(create_paste))
         .route("/paste/new", post(new_paste))
         .route("/paste/:id", get(get_paste))
-        .route("/paste/:id/download", get(download_paste))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)
