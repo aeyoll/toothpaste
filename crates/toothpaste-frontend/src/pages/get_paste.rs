@@ -55,7 +55,7 @@ fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {
 }
 
 #[derive(Deserialize, Debug)]
-struct PasteResponse {
+pub struct PasteResponse {
     filename: String,
     content: String,
 }
@@ -66,7 +66,6 @@ pub struct Props {
 }
 
 pub struct GetPaste {
-    id: String,
     filename: String,
     content: String,
     loaded: bool,
@@ -110,7 +109,6 @@ impl Component for GetPaste {
         });
 
         Self {
-            id: "0".into(),
             filename: String::new(),
             content: String::new(),
             loaded: false,
