@@ -10,6 +10,7 @@
     @apply block;
     @apply font-medium;
     @apply leading-6;
+    @apply font-bold;
     @apply text-gray-900;
     @apply text-sm;
 }

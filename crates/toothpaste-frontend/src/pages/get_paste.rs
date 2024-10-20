@@ -170,13 +170,13 @@ impl Component for GetPaste {
                     <h1 class="title">{ &self.filename }</h1>
                     <div class="mb-4">
                         <button
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                            class="btn btn-primary mr-2"
                             onclick={link.callback(|_| Msg::CopyToClipboard)}
                         >
                             { "Copy to Clipboard" }
                         </button>
                         <button
-                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            class="btn btn-primary"
                             onclick={link.callback(|_| Msg::DownloadFile)}
                         >
                             { "Download File" }
