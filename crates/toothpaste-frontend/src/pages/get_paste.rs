@@ -168,7 +168,7 @@ impl Component for GetPaste {
             html! {
                 <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <h1 class="title">{ &self.filename }</h1>
-                    <div class="mb-4">
+                    <div class="mb-6">
                         <button
                             class="btn btn-primary mr-2"
                             onclick={link.callback(|_| Msg::CopyToClipboard)}
