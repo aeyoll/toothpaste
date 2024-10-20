@@ -1,4 +1,6 @@
 use yew::prelude::*;
+use yew_router::components::Link;
+use crate::app::Route;
 
 pub struct Home;
 
@@ -13,7 +15,15 @@ impl Component for Home {
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
             <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                { "Home" }
+                <h1 class="title">{ "Toothpaste is a pastebin written in Rust." }</h1>
+                <p class="mb-6">{ "It's a simple and secure pastebin." }</p>
+                <p class="mb-6">{ "It's open source and available on GitHub." }</p>
+                <p class="mb-6">{ "It uses client side encryption to protect your pastes." }</p>
+                <div class="mb-6">
+                    <Link<Route> classes="btn btn-primary" to={Route::NewPaste}>
+                        { "Create Paste" }
+                    </Link<Route>>
+                </div>
             </section>
         }
     }
