@@ -1,7 +1,6 @@
 mod database;
 mod routes;
 mod state;
-mod template;
 
 use std::{
     net::{Ipv4Addr, SocketAddr},
@@ -45,11 +44,8 @@ async fn main() {
     let db = create_database_pool().await;
     Migrator::up(&db, None).await.unwrap();
 
-    // Should the new pastes be private by default?
-    let private = args.private;
-
     // State
-    let shared_state = Arc::new(AppState { db, private });
+    let shared_state = Arc::new(AppState { db });
 
     let app = Router::new()
         .route("/paste/cleanup", get(cleanup))
@@ -79,7 +75,4 @@ struct Options {
 
     #[structopt(long, default_value = "8080")]
     port: u16,
-
-    #[structopt(long)]
-    private: bool,
 }

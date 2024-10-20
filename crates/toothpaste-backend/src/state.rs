@@ -5,7 +5,4 @@ use sea_orm::DatabaseConnection;
 pub struct AppState {
     /// The database pool
     pub db: DatabaseConnection,
-
-    /// Are the paste created as private by default?
-    pub private: bool,
 }
