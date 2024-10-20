@@ -66,3 +66,12 @@
 .btn-primary {
     @apply bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600;
 }
+
+pre {
+    @apply block;
+    @apply mt-3;
+    @apply mb-3;
+    @apply px-3;
+    @apply py-2;
+    @apply w-full;
+}

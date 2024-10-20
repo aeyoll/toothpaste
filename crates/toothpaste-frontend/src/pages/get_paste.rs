@@ -1,3 +1,4 @@
+use crate::components::safe_html::SafeHtml;
 use aes_gcm::aead::consts::U12;
 use aes_gcm::aead::{Aead, Nonce};
 use aes_gcm::aes::Aes256;
@@ -5,9 +6,16 @@ use aes_gcm::{Aes256Gcm, AesGcm, KeyInit};
 use base64::{engine::general_purpose, Engine as _};
 use gloo_net::http::Request;
 use serde::Deserialize;
+use std::ffi::OsStr;
+use std::path::Path as StdPath;
+use syntect::highlighting::ThemeSet;
+use syntect::html::highlighted_html_for_string;
+use syntect::parsing::SyntaxSet;
 use wasm_bindgen_futures::spawn_local;
 use web_sys::window;
 use yew::prelude::*;
+
+const THEME: &str = "base16-eighties.dark";
 
 fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteResponse, String> {
     // Decode the base64 key
@@ -119,8 +127,9 @@ impl Component for GetPaste {
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::PasteLoaded(paste) => {
-                self.filename = paste.filename;
-                self.content = paste.content;
+                self.filename = paste.filename.clone();
+                self.content = paste.content.clone();
+
                 self.loaded = true;
                 true
             }
@@ -151,10 +160,31 @@ impl Component for GetPaste {
                 html! {
                     <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                         <h1 class="title">{ &self.filename }</h1>
-                        <pre>{ &self.content }</pre>
+                        <SafeHtml html={self.highlight_content(&self.filename, &self.content)} />
+
                     </section>
                 }
             }
         }
+    }
+}
+
+impl GetPaste {
+    fn highlight_content(&self, filename: &str, content: &str) -> String {
+        let extension = StdPath::new(filename)
+            .extension()
+            .unwrap_or_else(|| OsStr::new("txt"))
+            .to_str()
+            .unwrap();
+
+        let ss = SyntaxSet::load_defaults_newlines();
+        let syntax = match ss.find_syntax_by_extension(extension) {
+            Some(syntax) => syntax,
+            None => ss.find_syntax_plain_text(),
+        };
+        let ts = ThemeSet::load_defaults();
+
+        highlighted_html_for_string(content, &ss, syntax, &ts.themes[THEME])
+            .unwrap_or_else(|_| content.to_string())
     }
 }
