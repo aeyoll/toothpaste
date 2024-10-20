@@ -15,9 +15,7 @@ use axum::{
 };
 use database::create_database_pool;
 use migration::{Migrator, MigratorTrait};
-use routes::{
-    cleanup::cleanup, get_paste::get_paste, new_paste::new_paste,
-};
+use routes::{cleanup::cleanup, get_paste::get_paste, new_paste::new_paste};
 use structopt::StructOpt;
 use tower_http::cors::{Any, CorsLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};

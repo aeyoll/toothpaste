@@ -94,9 +94,8 @@ impl Component for GetPaste {
 
         // Get the encryption key from the URL
         let window = window().unwrap();
-        let search_params = window.location().search().unwrap();
-        let url_params = web_sys::UrlSearchParams::new_with_str(&search_params).unwrap();
-        let key_base64 = url_params.get("key").unwrap_or_default();
+        let hash = window.location().hash().unwrap_or_default();
+        let key_base64 = hash.trim_start_matches('#').to_string();
 
         let link = ctx.link().clone();
 

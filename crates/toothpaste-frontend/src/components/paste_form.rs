@@ -165,7 +165,7 @@ pub fn paste_form(_props: &Props) -> Html {
                         let resp: PasteCreateResponse = resp.json().await.unwrap();
 
                         // Redirect to the paste page
-                        let location = format!("/paste/{}?key={}", resp.id, key_base64);
+                        let location = format!("/paste/{}#{}", resp.id, key_base64);
                         window()
                             .unwrap()
                             .location()
