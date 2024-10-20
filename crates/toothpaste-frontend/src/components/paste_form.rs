@@ -24,8 +24,7 @@ fn generate_key() -> [u8; 32] {
 }
 
 fn generate_nonce() -> Nonce<AesGcm<Aes256, U12>> {
-    let nonce = Aes256Gcm::generate_nonce(&mut OsRng);
-    nonce
+    Aes256Gcm::generate_nonce(&mut OsRng)
 }
 
 // Add this function for encryption

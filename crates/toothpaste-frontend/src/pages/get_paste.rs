@@ -145,21 +145,19 @@ impl Component for GetPaste {
                     <h1 class="title">{ "Loading..." }</h1>
                 </section>
             }
+        } else if let Some(error) = &self.error {
+            html! {
+                <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                    <h1 class="title">{ "Error" }</h1>
+                    <div>{ error }</div>
+                </section>
+            }
         } else {
-            if let Some(error) = &self.error {
-                html! {
-                    <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                        <h1 class="title">{ "Error" }</h1>
-                        <div>{ error }</div>
-                    </section>
-                }
-            } else {
-                html! {
-                    <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                        <h1 class="title">{ &self.filename }</h1>
-                        {self.highlight_content(&self.filename, &self.content)}
-                    </section>
-                }
+            html! {
+                <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                    <h1 class="title">{ &self.filename }</h1>
+                    {self.highlight_content(&self.filename, &self.content)}
+                </section>
             }
         }
     }
