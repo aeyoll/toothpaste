@@ -1,4 +1,3 @@
-use crate::components::safe_html::SafeHtml;
 use aes_gcm::aead::consts::U12;
 use aes_gcm::aead::{Aead, Nonce};
 use aes_gcm::aes::Aes256;
@@ -160,8 +159,7 @@ impl Component for GetPaste {
                 html! {
                     <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                         <h1 class="title">{ &self.filename }</h1>
-                        <SafeHtml html={self.highlight_content(&self.filename, &self.content)} />
-
+                        {self.highlight_content(&self.filename, &self.content)}
                     </section>
                 }
             }
@@ -170,7 +168,7 @@ impl Component for GetPaste {
 }
 
 impl GetPaste {
-    fn highlight_content(&self, filename: &str, content: &str) -> String {
+    fn highlight_content(&self, filename: &str, content: &str) -> Html {
         let extension = StdPath::new(filename)
             .extension()
             .unwrap_or_else(|| OsStr::new("txt"))
@@ -184,7 +182,9 @@ impl GetPaste {
         };
         let ts = ThemeSet::load_defaults();
 
-        highlighted_html_for_string(content, &ss, syntax, &ts.themes[THEME])
-            .unwrap_or_else(|_| content.to_string())
+        let html = highlighted_html_for_string(content, &ss, syntax, &ts.themes[THEME])
+            .unwrap_or_else(|_| content.to_string());
+
+        Html::from_html_unchecked(AttrValue::from(html))
     }
 }
