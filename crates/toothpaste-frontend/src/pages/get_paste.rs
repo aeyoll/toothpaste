@@ -50,9 +50,7 @@ fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {
     }
 
     let nonce = Nonce::<AesGcm<Aes256, U12>>::from_slice(&decoded[0..12]);
-    tracing::debug!("Nonce: {:?}", nonce);
     let ciphertext = &decoded[12..];
-    tracing::debug!("Ciphertext: {:?}", ciphertext);
 
     let plaintext = cipher
         .decrypt(nonce, ciphertext)
