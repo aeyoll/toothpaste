@@ -3731,6 +3731,7 @@ dependencies = [
  "aes-gcm",
  "base64",
  "gloo-net 0.6.0",
+ "gloo-timers 0.3.0",
  "indexmap",
  "serde",
  "serde_json",

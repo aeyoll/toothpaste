@@ -4,6 +4,7 @@ use aes_gcm::aes::Aes256;
 use aes_gcm::{Aes256Gcm, AesGcm, KeyInit};
 use base64::{engine::general_purpose, Engine as _};
 use gloo_net::http::Request;
+use gloo_timers::callback::Timeout;
 use serde::Deserialize;
 use std::ffi::OsStr;
 use std::path::Path as StdPath;
@@ -16,6 +17,14 @@ use web_sys::window;
 use yew::prelude::*;
 
 const THEME: &str = "base16-eighties.dark";
+
+enum CopyState {
+    Idle,
+    Copied,
+}
+
+const COPY_TO_CLIPBOARD_TEXT: &str = "Copy to clipboard";
+const COPIED_TO_CLIPBOARD_TEXT: &str = "Copied to clipboard";
 
 fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteResponse, String> {
     // Decode the base64 key
@@ -75,13 +84,15 @@ pub struct GetPaste {
     filename: String,
     content: String,
     loaded: bool,
+    copy_state: CopyState,
     error: Option<String>,
 }
 
 pub enum Msg {
     PasteLoaded(PasteResponse),
     DecryptionError(String),
-    CopyToClipboard,
+    StartCopying,
+    ResetCopyState,
     DownloadFile,
 }
 
@@ -118,17 +129,17 @@ impl Component for GetPaste {
         Self {
             filename: String::new(),
             content: String::new(),
+            copy_state: CopyState::Idle,
             loaded: false,
             error: None,
         }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::PasteLoaded(paste) => {
                 self.filename = paste.filename.clone();
                 self.content = paste.content.clone();
-
                 self.loaded = true;
                 true
             }
@@ -137,9 +148,18 @@ impl Component for GetPaste {
                 self.loaded = true;
                 true
             }
-            Msg::CopyToClipboard => {
+            Msg::StartCopying => {
+                self.copy_state = CopyState::Copied;
                 self.copy_to_clipboard();
-                false
+                let link = ctx.link().clone();
+                spawn_local(async move {
+                    Timeout::new(5000, move || link.send_message(Msg::ResetCopyState)).forget();
+                });
+                true
+            }
+            Msg::ResetCopyState => {
+                self.copy_state = CopyState::Idle;
+                true
             }
             Msg::DownloadFile => {
                 self.download_file();
@@ -170,9 +190,12 @@ impl Component for GetPaste {
                     <div class="mb-6">
                         <button
                             class="btn btn-primary mr-2"
-                            onclick={link.callback(|_| Msg::CopyToClipboard)}
+                            onclick={link.callback(|_| Msg::StartCopying)}
                         >
-                            { "Copy to Clipboard" }
+                            { match self.copy_state {
+                                CopyState::Idle => COPY_TO_CLIPBOARD_TEXT,
+                                CopyState::Copied => COPIED_TO_CLIPBOARD_TEXT,
+                            } }
                         </button>
                         <button
                             class="btn btn-primary"
@@ -209,11 +232,13 @@ impl GetPaste {
         Html::from_html_unchecked(AttrValue::from(html))
     }
 
-    fn copy_to_clipboard(&self) {
+    fn copy_to_clipboard(&self) -> bool {
         let window = window().unwrap();
         let navigator = window.navigator();
         let clipboard = navigator.clipboard();
         let _ = clipboard.write_text(&self.content);
+
+        true
     }
 
     fn download_file(&self) {
