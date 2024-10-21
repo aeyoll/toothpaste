@@ -45,9 +45,9 @@ async fn main() {
     let shared_state = Arc::new(AppState { db });
 
     let app = Router::new()
-        .route("/paste/cleanup", get(cleanup))
-        .route("/paste/new", post(new_paste))
-        .route("/paste/:id", get(get_paste))
+        .route("/api/paste/cleanup", get(cleanup))
+        .route("/api/paste/new", post(new_paste))
+        .route("/api/paste/:id", get(get_paste))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)

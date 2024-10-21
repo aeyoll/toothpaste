@@ -101,7 +101,7 @@ impl Component for GetPaste {
 
         spawn_local(async move {
             let api_url: &'static str = env!("TOOTHPASTE_API_URL");
-            let api_route = format!("{}/paste/{}", api_url, id);
+            let api_route = format!("{}/api/paste/{}", api_url, id);
             let resp = Request::get(&api_route).send().await.unwrap();
 
             if resp.ok() {

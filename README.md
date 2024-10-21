@@ -56,7 +56,7 @@ cargo run -p toothpaste-backend -- --ip 127.0.0.1 --port 8080 # default values
 ## Set up a cron job for paste expiration cleanup:
 
 ```shell
-* * * * * wget -q -O /dev/null "http(s)://your_host/paste/cleanup"
+* * * * * wget -q -O /dev/null "http(s)://your_host/api/paste/cleanup"
 ```
 
 ## License

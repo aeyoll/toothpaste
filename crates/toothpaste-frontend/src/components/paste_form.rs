@@ -153,7 +153,7 @@ pub fn paste_form(_props: &Props) -> Html {
 
                     wasm_bindgen_futures::spawn_local(async move {
                         let api_url: &'static str = env!("TOOTHPASTE_API_URL");
-                        let api_route = format!("{}/paste/new", api_url);
+                        let api_route = format!("{}/api/paste/new", api_url);
                         let resp = Request::post(api_route.as_str())
                             .json(&encrypted_paste)
                             .unwrap()
