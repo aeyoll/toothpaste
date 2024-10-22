@@ -59,6 +59,28 @@ cargo run -p toothpaste-backend -- --ip 127.0.0.1 --port 8080 # default values
 * * * * * wget -q -O /dev/null "http(s)://your_host/api/paste/cleanup"
 ```
 
+## Sample nginx configuration
+
+```nginx
+server {
+    server_name paste.foo.bar;
+
+    root /path/to/toothpaste/frontend;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_set_header Host $host;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+    }
+}
+```
+
 ## License
 
 See the LICENSE file for details.
