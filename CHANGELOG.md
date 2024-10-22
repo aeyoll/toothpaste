@@ -2,6 +2,64 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.5.0 - 2024-10-22
+#### Bug Fixes
+- fix router - (63a6961) - aeyoll
+#### Build system
+- upgrade sea-orm - (1f98b21) - aeyoll
+#### Documentation
+- update README - (d4c46f6) - aeyoll
+#### Features
+- add text when copying to clipboard - (25f767c) - aeyoll
+- use anchor to fetch the key - (b04fb87) - aeyoll
+- add homepage content - (796264b) - aeyoll
+- add dark mode - (a6f42f8) - aeyoll
+- improve styling - (2230ce6) - aeyoll
+- allow to copy and download a paste - (0469c0b) - aeyoll
+- add a logo - (4b3dff8) - aeyoll
+- add syntax highlight in the frontend - (ba26263) - aeyoll
+- allow to filter log messages using compile time env variable - (5307c21) - aeyoll
+- add default api url env variable - (914b185) - aeyoll
+- finish to implement decoding - (6e20996) - aeyoll
+- start to implement decoding - (2b86a81) - aeyoll
+- add redirection to the paste page - (643d024) - aeyoll
+- add encryption methods - (9f5a007) - aeyoll
+- set actions - (4c2e003) - aeyoll
+- add new paste form - (b820848) - aeyoll
+- add tailwind postcss conf - (0da5f63) - aeyoll
+- add an active route component - (3e0133d) - aeyoll
+- add link to home - (ab51160) - aeyoll
+- add 404 integration - (6a0fccf) - aeyoll
+- start integration - (9bc6f01) - aeyoll
+- add basic pages - (6b67fef) - aeyoll
+#### Miscellaneous Chores
+- remove static assets - (a3d0759) - aeyoll
+- cleanup dependencies - (b967522) - aeyoll
+- remove unused options and crates - (8cd0f91) - aeyoll
+- wording - (5ee2238) - aeyoll
+- delete an unused route - (753a7a8) - aeyoll
+- rename title - (d664667) - aeyoll
+- fix clippy errors - (1d8e090) - aeyoll
+- remove logger - (c140ef3) - aeyoll
+- delete yarn.lock file - (88d418d) - aeyoll
+- add missing body to app - (4b86a97) - aeyoll
+- updated lock files - (8d339a9) - aeyoll
+- update rust dependencies - (a5efc8b) - aeyoll
+- update js dependencies - (969fcee) - aeyoll
+#### Refactoring
+- add a prefix to the api routes - (3130cef) - aeyoll
+- remove unused routes - (1805760) - aeyoll
+- move profile configuration to the workspace - (98f367c) - aeyoll
+- remove index from api - (ec6af99) - aeyoll
+- simplify display of highlight content - (3aa349a) - aeyoll
+- remove unused field - (80fe9b2) - aeyoll
+- simplify code - (8609fec) - aeyoll
+- move to separate crates - (9cdf419) - aeyoll
+#### Style
+- fmt - (33ec634) - aeyoll
+
+- - -
+
 ## 0.4.1 - 2022-12-04
 #### Miscellaneous Chores
 - update Rust dependencies - (2fcf36b) - aeyoll
