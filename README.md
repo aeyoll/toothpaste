@@ -3,52 +3,62 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 ![License](https://img.shields.io/github/license/aeyoll/toothpaste)
 
-A pastebin written in Rust.
+A pastebin application written in Rust with a frontend built using Yew.
 
-Requirements
----
+## Requirements
 
-- [https://yarnpkg.com/](yarn): Asset management
+- [Rust](https://www.rust-lang.org/)
+- [Node.js](https://nodejs.org/)
+- [Trunk](https://trunkrs.dev/)
 
-Install
----
+## Project Structure
 
-Set a `DATABASE_URL` environment variable (eg `DATABASE_URL=sqlite://sqlite.db`). Then, init the database:
+The project is organized into two main crates:
 
-```sh
+1. `toothpaste-backend`: The Rust backend server
+2. `toothpaste-frontend`: The Yew-based frontend
+
+## Installation and Setup
+
+1. Set the `DATABASE_URL` environment variable (e.g., `DATABASE_URL=sqlite://sqlite.db`).
+
+2. Initialize the database:
+
+```shell
 touch sqlite.db
 ```
 
-Build static assets:
+## Build the frontend assets
 
-```sh
-yarn
-yarn run build
+```shell
+cd crates/toothpaste-frontend
+
+# Build the frontend assets
+# For development
+TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk serve --port 8081
+# For production
+TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk build --release
+
+# Compile the css
+npm install
+# For development
+npm run watch
+# For production
+npm run build
 ```
 
-Launch the http server:
+## Build and run the backend server:
 
-```sh
-toothpaste --ip 127.0.0.1 --port 8080 # default values
+```shell
+cargo run -p toothpaste-backend -- --ip 127.0.0.1 --port 8080 # default values
 ```
 
-Finally, setup a cron every minute for paste expire cleanup:
+## Set up a cron job for paste expiration cleanup:
 
-```sh
-* * * * * wget -q -O /dev/null "http(s)://your_host/paste/cleanup"
+```shell
+* * * * * wget -q -O /dev/null "http(s)://your_host/api/paste/cleanup"
 ```
 
-Development
----
+## License
 
-For easier development, use [https://github.com/watchexec/cargo-watch](cargo-watch) to auto-compile on change:
-
-```sh
-cargo watch -x 'run'
-```
-
-Auto-compile static assets:
-
-```sh
-yarn run start
-```
+See the LICENSE file for details.

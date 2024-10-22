@@ -5,3 +5,12 @@
 *.db-wal
 /static
 /node_modules
+
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
+crates/toothpaste-frontend/node_modules
+crates/toothpaste-frontend/tailwind.css
