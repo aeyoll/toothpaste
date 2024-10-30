@@ -9,98 +9,98 @@
 }
 
 .title {
-    @apply mb-4;
-    @apply text-4xl;
-    @apply font-bold;
-    @apply text-gray-900;
-    @apply dark:text-gray-100;
+  @apply mb-4;
+  @apply text-4xl;
+  @apply font-bold;
+  @apply text-gray-900;
+  @apply dark:text-gray-100;
 }
 
 .form-label {
-    @apply block;
-    @apply leading-6;
-    @apply font-bold;
-    @apply text-gray-900;
-    @apply dark:text-gray-100;
-    @apply text-sm;
+  @apply block;
+  @apply leading-6;
+  @apply font-bold;
+  @apply text-gray-900;
+  @apply dark:text-gray-100;
+  @apply text-sm;
 }
 
 .form-control {
-    @apply bg-white;
-    @apply dark:bg-gray-800;
-    @apply block;
-    @apply border-gray-300;
-    @apply dark:border-gray-700;
-    @apply border;
-    @apply focus:border-indigo-500;
-    @apply focus:outline-none;
-    @apply focus:ring-indigo-500;
-    @apply mt-2;
-    @apply px-3;
-    @apply py-2;
-    @apply rounded-md;
-    @apply shadow-sm;
-    @apply sm:text-sm;
-    @apply text-gray-900;
-    @apply dark:text-gray-100;
-    @apply text-sm w-full;
+  @apply bg-white;
+  @apply dark:bg-gray-800;
+  @apply block;
+  @apply border-gray-300;
+  @apply dark:border-gray-700;
+  @apply border;
+  @apply focus:border-indigo-500;
+  @apply focus:outline-none;
+  @apply focus:ring-indigo-500;
+  @apply mt-2;
+  @apply px-3;
+  @apply py-2;
+  @apply rounded-md;
+  @apply shadow-sm;
+  @apply sm:text-sm;
+  @apply text-gray-900;
+  @apply dark:text-gray-100;
+  @apply text-sm w-full;
 }
 
 .form-help {
-    @apply mt-2;
-    @apply text-sm;
-    @apply leading-6;
-    @apply text-gray-600;
-    @apply dark:text-gray-400;
+  @apply mt-2;
+  @apply text-sm;
+  @apply leading-6;
+  @apply text-gray-600;
+  @apply dark:text-gray-400;
 }
 
 .form-check-input {
-    @apply w-4;
-    @apply h-4;
-    @apply text-indigo-600;
-    @apply border-gray-300;
-    @apply dark:border-gray-700;
-    @apply rounded;
+  @apply w-4;
+  @apply h-4;
+  @apply text-indigo-600;
+  @apply border-gray-300;
+  @apply dark:border-gray-700;
+  @apply rounded;
 }
 
 .btn {
-    @apply border-transparent;
-    @apply border;
-    @apply duration-150;
-    @apply ease-in-out;
-    @apply focus:outline-none;
-    @apply font-medium;
-    @apply inline-flex;
-    @apply items-center;
-    @apply leading-5;
-    @apply px-4;
-    @apply py-2;
-    @apply rounded-md;
-    @apply text-sm;
-    @apply text-white;
-    @apply transition;
+  @apply border-transparent;
+  @apply border;
+  @apply duration-150;
+  @apply ease-in-out;
+  @apply focus:outline-none;
+  @apply font-medium;
+  @apply inline-flex;
+  @apply items-center;
+  @apply leading-5;
+  @apply px-4;
+  @apply py-2;
+  @apply rounded-md;
+  @apply text-sm;
+  @apply text-white;
+  @apply transition;
 }
 
 .btn-primary {
-    @apply bg-indigo-600;
-    @apply hover:bg-indigo-500;
-    @apply focus-visible:outline-indigo-600;
-    @apply dark:bg-indigo-700;
-    @apply dark:hover:bg-indigo-600;
+  @apply bg-indigo-600;
+  @apply hover:bg-indigo-500;
+  @apply focus-visible:outline-indigo-600;
+  @apply dark:bg-indigo-700;
+  @apply dark:hover:bg-indigo-600;
 }
 
 pre {
-    @apply block;
-    @apply border-gray-300;
-    @apply dark:border-gray-700;
-    @apply border;
-    @apply mt-3;
-    @apply mb-3;
-    @apply px-3;
-    @apply py-2;
-    @apply w-full;
-    @apply rounded-md;
-    @apply shadow-sm;
-    @apply bg-gray-800 !important;
-    @apply dark:bg-gray-800;
+  @apply block;
+  @apply border-gray-300;
+  @apply dark:border-gray-700;
+  @apply border;
+  @apply mt-3;
+  @apply mb-3;
+  @apply px-3;
+  @apply py-2;
+  @apply w-full;
+  @apply rounded-md;
+  @apply shadow-sm;
+  @apply bg-gray-800 !important;
+  @apply dark:bg-gray-800;
 }
