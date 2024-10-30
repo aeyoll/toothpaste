@@ -103,4 +103,5 @@ pre {
   @apply shadow-sm;
   @apply bg-gray-800 !important;
   @apply dark:bg-gray-800;
+  @apply whitespace-break-spaces;
 }
