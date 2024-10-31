@@ -14,3 +14,5 @@
 #/target
 crates/toothpaste-frontend/node_modules
 crates/toothpaste-frontend/tailwind.css
+dist
+toothpaste.zip
