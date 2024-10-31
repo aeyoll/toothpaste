@@ -72,6 +72,10 @@ impl App {
                                     </RouteLink>
 
                                     <a href="https://github.com/aeyoll/toothpaste" target="_blank" rel="noopener" class="rounded-md px-3 py-2 text-sm font-medium text-white">{ "Github" }</a>
+
+                                    <span class="rounded-md px-3 py-2 text-sm font-medium text-gray-300">
+                                        { format!("v{}", env!("CARGO_PKG_VERSION")) }
+                                    </span>
                                 </div>
                             </div>
                         </div>
