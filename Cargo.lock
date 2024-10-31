@@ -3695,7 +3695,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-backend"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "axum",
  "chrono",
@@ -3718,7 +3718,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-entity"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "sea-orm",
  "serde",
@@ -3726,7 +3726,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-frontend"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "aes-gcm",
  "base64",
@@ -3744,7 +3744,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-migration"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "async-std",
  "sea-orm-migration",
