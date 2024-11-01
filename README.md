@@ -33,18 +33,11 @@ touch sqlite.db
 ```shell
 cd crates/toothpaste-frontend
 
-# Build the frontend assets
+# Build the frontend static
 # For development
 TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk serve --port 8081
 # For production
 TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk build --release
-
-# Compile the css
-npm install
-# For development
-npm run watch
-# For production
-npm run build
 ```
 
 ## Build and run the backend server:

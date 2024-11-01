@@ -14,8 +14,6 @@ clean:
 build-frontend:
 	# Create dist directory
 	mkdir -p $(DIST_DIR)
-	# Install npm dependencies and build CSS
-	cd $(FRONTEND_DIR) && npm install && npm run build
 	# Build frontend with Trunk
 	cd $(FRONTEND_DIR) && TOOTHPASTE_API_URL=$(TOOTHPASTE_API_URL) trunk build --release
 	# Copy frontend build to dist
