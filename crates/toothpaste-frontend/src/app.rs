@@ -4,8 +4,8 @@ use yew_router::prelude::*;
 use yew::html::Scope;
 
 use crate::components::route_link::RouteLink;
+use crate::pages::about::About;
 use crate::pages::get_paste::GetPaste;
-use crate::pages::home::Home;
 use crate::pages::new_paste::NewPaste;
 use crate::pages::page_not_found::PageNotFound;
 
@@ -13,10 +13,10 @@ use crate::pages::page_not_found::PageNotFound;
 pub enum Route {
     #[at("/paste/:id")]
     GetPaste { id: String },
-    #[at("/new")]
-    NewPaste,
+    #[at("/about")]
+    About,
     #[at("/")]
-    Home,
+    NewPaste,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -63,12 +63,12 @@ impl App {
                             </div>
                             <div class="hidden sm:ml-6 sm:block">
                                 <div class="flex space-x-4">
-                                    <RouteLink to={Route::Home}>
-                                        { "Home" }
-                                    </RouteLink>
-
                                     <RouteLink to={Route::NewPaste}>
                                         { "New paste" }
+                                    </RouteLink>
+
+                                    <RouteLink to={Route::About}>
+                                        { "About" }
                                     </RouteLink>
 
                                     <a href="https://github.com/aeyoll/toothpaste" target="_blank" rel="noopener" class="rounded-md px-3 py-2 text-sm font-medium text-white">{ "Github" }</a>
@@ -88,8 +88,8 @@ impl App {
 
 fn switch(routes: Route) -> Html {
     match routes {
-        Route::Home => {
-            html! { <Home /> }
+        Route::About => {
+            html! { <About /> }
         }
         Route::GetPaste { id } => {
             html! { <GetPaste id={id} /> }

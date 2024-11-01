@@ -2,9 +2,9 @@ use crate::app::Route;
 use yew::prelude::*;
 use yew_router::components::Link;
 
-pub struct Home;
+pub struct About;
 
-impl Component for Home {
+impl Component for About {
     type Message = ();
     type Properties = ();
 
