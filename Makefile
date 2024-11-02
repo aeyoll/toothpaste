@@ -6,7 +6,7 @@ DIST_DIR = dist
 FRONTEND_DIR = crates/toothpaste-frontend
 PACKAGE_NAME = toothpaste.zip
 
-all: clean build-frontend build-backend package
+all: clean build-frontend build-backend build-cli package
 
 clean:
 	rm -rf $(DIST_DIR)
