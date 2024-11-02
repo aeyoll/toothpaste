@@ -44,10 +44,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // Send request to API
-    let api_url =
-        std::env::var("TOOTHPASTE_API_URL").unwrap_or_else(|_| "http://127.0.0.1:8080".to_string());
+    let api_url: &'static str = env!("TOOTHPASTE_API_URL");
+    let api_route = format!("{}/api/paste/new", api_url);
 
-    let resp = ureq::post(&format!("{}/api/paste/new", api_url)).send_json(&encrypted_paste)?;
+    let resp = ureq::post(&api_route).send_json(&encrypted_paste)?;
 
     // Get paste ID from response
     let paste_response: PasteCreateResponse = resp.into_json()?;
