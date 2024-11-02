@@ -1,16 +1,11 @@
-use aes_gcm::aead::consts::U12;
-use aes_gcm::aead::{Aead, Nonce};
-use aes_gcm::aes::Aes256;
-use aes_gcm::{Aes256Gcm, AesGcm, KeyInit};
-use base64::{engine::general_purpose, Engine as _};
 use gloo_net::http::Request;
 use gloo_timers::callback::Timeout;
-use serde::Deserialize;
 use std::ffi::OsStr;
 use std::path::Path as StdPath;
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
 use syntect::parsing::SyntaxSet;
+use toothpaste_encrypt::{decrypt_paste, PasteResponse};
 use wasm_bindgen_futures::wasm_bindgen::JsCast;
 use wasm_bindgen_futures::{js_sys, spawn_local};
 use web_sys::window;
@@ -25,55 +20,6 @@ enum CopyState {
 
 const COPY_TO_CLIPBOARD_TEXT: &str = "Copy to clipboard";
 const COPIED_TO_CLIPBOARD_TEXT: &str = "Copied to clipboard";
-
-fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteResponse, String> {
-    // Decode the base64 key
-    let key = general_purpose::URL_SAFE_NO_PAD
-        .decode(key_base64)
-        .map_err(|e| format!("Failed to decode key: {:?}", e))?;
-
-    if key.len() != 32 {
-        return Err("Invalid key length".to_string());
-    }
-
-    let key: [u8; 32] = key.try_into().unwrap();
-
-    // Create cipher instance
-    let cipher = Aes256Gcm::new(&key.into());
-
-    // Decrypt filename
-    let filename = decrypt_data(&cipher, &paste.filename)?;
-
-    // Decrypt content
-    let content = decrypt_data(&cipher, &paste.content)?;
-
-    Ok(PasteResponse { filename, content })
-}
-
-fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {
-    let decoded = general_purpose::URL_SAFE_NO_PAD
-        .decode(data)
-        .map_err(|e| format!("Failed to decode data: {:?}", e))?;
-
-    if decoded.len() < 12 {
-        return Err("Invalid data length".to_string());
-    }
-
-    let nonce = Nonce::<AesGcm<Aes256, U12>>::from_slice(&decoded[0..12]);
-    let ciphertext = &decoded[12..];
-
-    let plaintext = cipher
-        .decrypt(nonce, ciphertext)
-        .map_err(|e| format!("Decryption error: {:?}", e))?;
-
-    String::from_utf8(plaintext).map_err(|e| format!("UTF-8 decoding error: {:?}", e))
-}
-
-#[derive(Deserialize, Debug)]
-pub struct PasteResponse {
-    filename: String,
-    content: String,
-}
 
 #[derive(Clone, Debug, Eq, PartialEq, Properties)]
 pub struct Props {

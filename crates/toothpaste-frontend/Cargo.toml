@@ -11,7 +11,7 @@ categories = ["gui", "wasm", "web-programming"]
 version = { workspace = true }
 
 [dependencies]
-aes-gcm = { workspace = true }
+toothpaste-encrypt = { workspace = true }
 base64 = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

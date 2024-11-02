@@ -1,12 +1,9 @@
-use aes_gcm::aead::consts::U12;
-use aes_gcm::aead::rand_core::RngCore;
-use aes_gcm::aead::{Aead, Nonce, OsRng};
-use aes_gcm::aes::Aes256;
-use aes_gcm::{AeadCore, Aes256Gcm, AesGcm, KeyInit};
 use base64::{engine::general_purpose, Engine as _};
 use clap::Parser;
-use serde::{Deserialize, Serialize};
 use std::io::{self, Read};
+use toothpaste_encrypt::{
+    encrypt, generate_key, generate_nonce, EncryptedPaste, PasteCreateResponse,
+};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -18,43 +15,6 @@ struct Cli {
     /// Expiration time in seconds (default: 86400 - 1 day)
     #[arg(short, long, default_value = "86400")]
     expire_after: i64,
-}
-
-#[derive(Deserialize)]
-struct PasteCreateResponse {
-    id: String,
-}
-
-#[derive(Serialize)]
-struct EncryptedPaste {
-    filename: String,
-    content: String,
-    expire_after: i64,
-}
-
-fn generate_key() -> [u8; 32] {
-    let mut key = [0u8; 32];
-    OsRng.fill_bytes(&mut key);
-    key
-}
-
-fn generate_nonce() -> Nonce<AesGcm<Aes256, U12>> {
-    Aes256Gcm::generate_nonce(&mut OsRng)
-}
-
-fn encrypt(
-    data: &str,
-    nonce: &Nonce<AesGcm<Aes256, U12>>,
-    key: &[u8; 32],
-) -> Result<String, String> {
-    let cipher = Aes256Gcm::new(key.into());
-    let ciphertext = cipher
-        .encrypt(nonce, data.as_bytes())
-        .map_err(|e| format!("Encryption error: {:?}", e))?;
-
-    let mut result = nonce.to_vec();
-    result.extend_from_slice(&ciphertext);
-    Ok(general_purpose::URL_SAFE_NO_PAD.encode(result))
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
