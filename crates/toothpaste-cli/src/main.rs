@@ -1,6 +1,6 @@
 use base64::{engine::general_purpose, Engine as _};
 use clap::Parser;
-use std::io::{self, Read};
+use std::io::{self, IsTerminal, Read};
 use toothpaste_encrypt::{
     encrypt, generate_key, generate_nonce, EncryptedPaste, PasteCreateResponse,
 };
@@ -19,6 +19,11 @@ struct Cli {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
+
+    // Check if stdin is connected to a terminal
+    if io::stdin().is_terminal() {
+        return Err("No input provided. Please pipe or redirect input to the program.".into());
+    }
 
     // Read input from stdin
     let mut content = String::new();
