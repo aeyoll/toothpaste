@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.0 - 2024-11-02
+#### Build system
+- **(cli)** set api url at compile time - (be322bd) - *aeyoll*
+- upgrade deps - (3f07c6e) - aeyoll
+- add cli build script - (03d19fc) - aeyoll
+- use trunk compilation for tailwind - (784862a) - aeyoll
+#### Documentation
+- add cli instructions - (4f85d4f) - aeyoll
+#### Features
+- allow to add a paste from cli - (04b05c0) - aeyoll
+- add icons in the navigation - (af99d96) - aeyoll
+- move the home page to an about page - (94cdea9) - aeyoll
+#### Refactoring
+- move the encryption functions to a separate crate - (7991ac3) - aeyoll
+
+- - -
+
 ## 0.5.1 - 2024-10-31
 #### Bug Fixes
 - break spaces in pre elements - (329f8b8) - aeyoll

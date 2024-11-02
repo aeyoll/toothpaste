@@ -11,7 +11,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.5.1"
+version = "0.6.0"
 
 [workspace.dependencies]
 toothpaste-entity = { path = "./crates/toothpaste-entity" }
