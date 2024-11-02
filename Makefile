@@ -19,6 +19,12 @@ build-frontend:
 	# Copy frontend build to dist
 	cp -r $(FRONTEND_DIR)/dist/* $(DIST_DIR)/
 
+build-cli:
+	# Build cli in release mode
+	cargo build --release -p toothpaste-cli
+	# Copy cli binary to dist
+	cp target/release/toothpaste-cli $(DIST_DIR)/
+
 build-backend:
 	# Build backend in release mode
 	cargo build --release -p toothpaste-backend
