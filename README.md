@@ -12,7 +12,7 @@ A pastebin application written in Rust with a frontend built using Yew.
 
 ## Project Structure
 
-The project is organized into two main crates:
+The project is organized into three main crates:
 
 1. `toothpaste-backend`: The Rust backend server
 2. `toothpaste-frontend`: The Yew-based frontend
