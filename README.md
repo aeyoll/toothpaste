@@ -17,6 +17,7 @@ The project is organized into two main crates:
 
 1. `toothpaste-backend`: The Rust backend server
 2. `toothpaste-frontend`: The Yew-based frontend
+3. `toothpaste-cli`: The CLI tool to create pastes
 
 ## Installation and Setup
 
@@ -44,6 +45,13 @@ TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk build --release
 
 ```shell
 cargo run -p toothpaste-backend -- --ip 127.0.0.1 --port 8080 # default values
+```
+
+## Build and run the CLI tool:
+
+```shell
+cargo run -p toothpaste-cli -- --filename toothpaste.txt --expire-after 86400 < your-content.txt
+cat your-content.txt | cargo run -p toothpaste-cli -- --filename toothpaste.txt --expire-after 86400
 ```
 
 ## Set up a cron job for paste expiration cleanup:
