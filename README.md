@@ -8,7 +8,6 @@ A pastebin application written in Rust with a frontend built using Yew.
 ## Requirements
 
 - [Rust](https://www.rust-lang.org/)
-- [Node.js](https://nodejs.org/)
 - [Trunk](https://trunkrs.dev/)
 
 ## Project Structure
