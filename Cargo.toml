@@ -4,6 +4,7 @@ members = [
     "crates/toothpaste-migration",
     "crates/toothpaste-backend",
     "crates/toothpaste-frontend",
+    "crates/toothpaste-cli",
 ]
 
 resolver = "2"
@@ -16,6 +17,11 @@ toothpaste-entity = { path = "./crates/toothpaste-entity" }
 toothpaste-migration = { path = "./crates/toothpaste-migration" }
 toothpaste-backend = { path = "./crates/toothpaste-backend" }
 toothpaste-frontend = { path = "./crates/toothpaste-frontend" }
+toothpaste-cli = { path = "./crates/toothpaste-cli" }
+aes-gcm = "0.10.1"
+base64 = "0.22.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.128"
 
 [profile.release]
 panic = 'abort'

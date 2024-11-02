@@ -1,0 +1,11 @@
+[package]
+name = "toothpaste-cli"
+edition = "2021"
+version.workspace = true
+
+[dependencies]
+aes-gcm = { workspace = true }
+base64 = { workspace = true }
+serde = { workspace = true }
+clap = { version = "4.5.20", features = ["derive"] }
+ureq = { version = "2.7.2", features = ["json"] }

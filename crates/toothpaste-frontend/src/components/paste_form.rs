@@ -27,7 +27,6 @@ fn generate_nonce() -> Nonce<AesGcm<Aes256, U12>> {
     Aes256Gcm::generate_nonce(&mut OsRng)
 }
 
-// Add this function for encryption
 fn encrypt(
     data: &str,
     nonce: &Nonce<AesGcm<Aes256, U12>>,
