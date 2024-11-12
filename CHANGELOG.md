@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.2 - 2024-11-12
+#### Continuous Integration
+- **(perf)** add cache to rust dependencies - (a865bcc) - *aeyoll*
+- update release name - (ac30388) - aeyoll
+
+- - -
+
 ## 0.6.1 - 2024-11-12
 #### Bug Fixes
 - **(cli)** trim content before saving - (c5deef2) - *aeyoll*
