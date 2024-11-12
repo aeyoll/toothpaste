@@ -3,7 +3,9 @@
 # Configuration
 DIST_DIR = dist
 FRONTEND_DIR = crates/toothpaste-frontend
-PACKAGE_NAME = toothpaste.zip
+VERSION ?= dev
+TARGET ?= x86_64-unknown-linux-gnu
+PACKAGE_NAME = toothpaste-$(VERSION)-$(TARGET).tar.gz
 
 all: clean build-frontend build-backend build-cli package
 
@@ -20,15 +22,15 @@ build-frontend:
 
 build-cli:
 	# Build cli in release mode
-	cargo build --release -p toothpaste-cli
+	cargo build --release -p toothpaste-cli --target $(TARGET)
 	# Copy cli binary to dist
-	cp target/release/toothpaste-cli $(DIST_DIR)/
+	cp target/$(TARGET)/release/toothpaste-cli $(DIST_DIR)/
 
 build-backend:
 	# Build backend in release mode
-	cargo build --release -p toothpaste-backend
+	cargo build --release -p toothpaste-backend --target $(TARGET)
 	# Copy backend binary to dist
-	cp target/release/toothpaste-backend $(DIST_DIR)/
+	cp target/$(TARGET)/release/toothpaste-backend $(DIST_DIR)/
 
 package:
-	zip -r $(PACKAGE_NAME) $(DIST_DIR)
+	tar -czf $(PACKAGE_NAME) -C $(DIST_DIR) .
