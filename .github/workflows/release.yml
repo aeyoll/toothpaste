@@ -61,7 +61,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           files: toothpaste-${{ env.VERSION }}-${{ matrix.target }}.tar.gz
           draft: false
           prerelease: false
