@@ -57,7 +57,8 @@ impl Component for GetPaste {
         let link = ctx.link().clone();
 
         spawn_local(async move {
-            let api_url: &'static str = env!("TOOTHPASTE_API_URL");
+            let api_url = std::env::var("TOOTHPASTE_API_URL")
+                .unwrap_or_else(|_| "".to_string());
             let api_route = format!("{}/api/paste/{}", api_url, id);
             let resp = Request::get(&api_route).send().await.unwrap();
 
