@@ -30,11 +30,38 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ matrix.target }}-
+
+      - name: Cache Trunk
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/trunk
+          key: ${{ runner.os }}-${{ matrix.target }}-trunk-${{ hashFiles('~/.cargo/bin/trunk') }}
+
       - name: Install Trunk
         run: cargo install trunk
+        if: steps.cache-trunk.outputs.cache-hit != 'true'
+
+      - name: Cache wasm-bindgen
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/wasm-bindgen
+          key: ${{ runner.os }}-${{ matrix.target }}-wasm-bindgen-${{ hashFiles('~/.cargo/bin/wasm-bindgen') }}
 
       - name: Install wasm-bindgen
         run: cargo install wasm-bindgen-cli
+        if: steps.cache-wasm-bindgen.outputs.cache-hit != 'true'
 
       - name: Install wasm32 target
         run: rustup target add wasm32-unknown-unknown
