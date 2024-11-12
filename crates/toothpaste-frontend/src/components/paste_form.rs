@@ -102,10 +102,23 @@ pub fn paste_form(_props: &Props) -> Html {
                     let paste_data = paste_data.clone();
                     let nonce = generate_nonce();
 
-                    let encrypted_filename =
-                        encrypt(&paste_data.filename, &nonce, &paste_data.encryption_key).unwrap();
+                    let encrypted_filename = encrypt(
+                        paste_data.filename.trim(),
+                        &nonce,
+                        &paste_data.encryption_key,
+                    )
+                    .unwrap();
+
+                    // Trim line ending and join them with a newline
+                    let content = &paste_data
+                        .content
+                        .lines()
+                        .map(|line| line.trim_end())
+                        .collect::<Vec<&str>>()
+                        .join("\n");
+
                     let encrypted_content =
-                        encrypt(&paste_data.content, &nonce, &paste_data.encryption_key).unwrap();
+                        encrypt(content, &nonce, &paste_data.encryption_key).unwrap();
 
                     let key_base64 =
                         general_purpose::URL_SAFE_NO_PAD.encode(paste_data.encryption_key);
