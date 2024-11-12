@@ -38,7 +38,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let nonce = generate_nonce();
 
     // Encrypt content and filename
-    let encrypted_filename = encrypt(&cli.filename, &nonce, &key)?;
+    let encrypted_filename = encrypt(cli.filename.trim(), &nonce, &key)?;
+
+    // Trim line ending and join them with a newline
+    let content = content
+        .lines()
+        .map(|line| line.trim_end())
+        .collect::<Vec<&str>>()
+        .join("\n");
+
     let encrypted_content = encrypt(&content, &nonce, &key)?;
 
     // Create encrypted paste object
