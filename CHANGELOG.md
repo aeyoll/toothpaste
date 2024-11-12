@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.1 - 2024-11-12
+#### Bug Fixes
+- **(cli)** trim content before saving - (c5deef2) - *aeyoll*
+- **(cli)** print an error when no redirection or indirection is provided - (5757eb4) - *aeyoll*
+- **(web)** trim content before saving - (ca3f392) - *aeyoll*
+#### Build system
+- add cli to the build script - (4e5b0d6) - aeyoll
+#### Continuous Integration
+- add a script to build on github - (b0bc664) - aeyoll
+#### Documentation
+- fix a typo - (3d32a73) - aeyoll
+- remove nodejs from the requirements - (cba1b49) - aeyoll
+#### Miscellaneous Chores
+- get api url environment variable at runtime - (23323ed) - aeyoll
+
+- - -
+
 ## 0.6.0 - 2024-11-02
 #### Build system
 - **(cli)** set api url at compile time - (be322bd) - *aeyoll*
