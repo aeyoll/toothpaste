@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.3 - 2024-11-13
+#### Bug Fixes
+- update static images urls - (0342b68) - aeyoll
+
+- - -
+
 ## 0.6.2 - 2024-11-12
 #### Continuous Integration
 - **(perf)** add cache to rust dependencies - (a865bcc) - *aeyoll*
