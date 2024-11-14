@@ -8,6 +8,10 @@ use toothpaste_encrypt::{
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
+    /// URL of the toothpaste API
+    #[arg(short, long, env = "TOOTHPASTE_API_URL", default_value = "http://127.0.0.1:8000")]
+    url: String,
+
     /// Filename for the paste
     #[arg(short, long, default_value = "toothpaste.txt")]
     filename: String,
@@ -57,9 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // Send request to API
-    let api_url =
-        std::env::var("TOOTHPASTE_API_URL").unwrap_or_else(|_| "http://127.0.0.1:8000".to_string());
-    let api_route = format!("{}/api/paste/new", api_url);
+    let api_route = format!("{}/api/paste/new", &cli.url);
 
     let resp = ureq::post(&api_route).send_json(&encrypted_paste)?;
 
@@ -70,7 +72,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let key_base64 = general_purpose::URL_SAFE_NO_PAD.encode(key);
 
     // Print the URL
-    println!("{}/paste/{}#{}", api_url, paste_response.id, key_base64);
+    println!("{}/paste/{}#{}", &cli.url, paste_response.id, key_base64);
 
     Ok(())
 }

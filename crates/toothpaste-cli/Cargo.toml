@@ -7,5 +7,5 @@ version.workspace = true
 toothpaste-encrypt = { workspace = true }
 base64 = { workspace = true }
 serde = { workspace = true }
-clap = { version = "4.5.20", features = ["derive"] }
+clap = { version = "4.5.20", features = ["derive", "env"] }
 ureq = { version = "2.7.2", features = ["json"] }
