@@ -9,29 +9,47 @@ use toothpaste_encrypt::{
 #[command(version, about, long_about = None)]
 struct Cli {
     /// URL of the toothpaste API
-    #[arg(short, long, env = "TOOTHPASTE_API_URL", default_value = "http://127.0.0.1:8000")]
+    #[arg(
+        short,
+        long,
+        env = "TOOTHPASTE_API_URL",
+        default_value = "http://127.0.0.1:8000"
+    )]
     url: String,
 
-    /// Filename for the paste
+    /// name for the paste
     #[arg(short, long, default_value = "toothpaste.txt")]
-    filename: String,
+    name: String,
 
     /// Expiration time in seconds (default: 86400 - 1 day)
     #[arg(short, long, default_value = "86400")]
     expire_after: i64,
+
+    /// File to read content from
+    #[arg(short, long)]
+    file: Option<String>,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-
-    // Check if stdin is connected to a terminal
-    if io::stdin().is_terminal() {
-        return Err("No input provided. Please pipe or redirect input to the program.".into());
-    }
-
-    // Read input from stdin
+    let mut name = cli.name.clone();
     let mut content = String::new();
-    io::stdin().read_to_string(&mut content)?;
+
+    if let Some(file) = cli.file {
+        // Read content from file
+        std::fs::File::open(&file)?.read_to_string(&mut content)?;
+
+        // Set name to file name
+        name = file.clone();
+    } else {
+        // Check if stdin is connected to a terminal
+        if io::stdin().is_terminal() {
+            return Err("No input provided. Please pipe or redirect input to the program.".into());
+        }
+
+        // Read content from stdin
+        io::stdin().read_to_string(&mut content)?;
+    }
 
     if content.is_empty() {
         return Err("Empty content".into());
@@ -42,7 +60,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let nonce = generate_nonce();
 
     // Encrypt content and filename
-    let encrypted_filename = encrypt(cli.filename.trim(), &nonce, &key)?;
+    let encrypted_filename = encrypt(name.trim(), &nonce, &key)?;
 
     // Trim line ending and join them with a newline
     let content = content
