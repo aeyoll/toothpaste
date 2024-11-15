@@ -13,7 +13,7 @@ struct Cli {
         short,
         long,
         env = "TOOTHPASTE_API_URL",
-        default_value = "http://127.0.0.1:8000"
+        default_value = "http://127.0.0.1:8080"
     )]
     url: String,
 
