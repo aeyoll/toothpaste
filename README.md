@@ -3,7 +3,7 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 ![License](https://img.shields.io/github/license/aeyoll/toothpaste)
 
-A pastebin application written in Rust with a frontend built using Yew.
+A pastebin application written in Rust with a frontend built using Yew. It also includes a CLI tool to create pastes.
 
 ## Requirements
 
@@ -37,20 +37,21 @@ cd crates/toothpaste-frontend
 # For development
 TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk serve --port 8081
 # For production
-TOOTHPASTE_API_URL=http://127.0.0.1:8080 trunk build --release
+trunk build --release
 ```
 
 ## Build and run the backend server:
 
 ```shell
-cargo run -p toothpaste-backend -- --ip 127.0.0.1 --port 8080 # default values
+toothpaste-backend --ip 127.0.0.1 --port 8080 # default values
 ```
 
 ## Build and run the CLI tool:
 
 ```shell
-cargo run -p toothpaste-cli -- --filename toothpaste.txt --expire-after 86400 < your-content.txt
-cat your-content.txt | cargo run -p toothpaste-cli -- --filename toothpaste.txt --expire-after 86400
+toothpaste-cli --name toothpaste.txt --expire-after 86400 < your-content.txt # From stdin redirection
+cat your-content.txt | toothpaste-cli --name toothpaste.txt --expire-after 86400 # From stdin indirection
+toothpaste-cli --expire-after 86400 -f your-content.txt # From file
 ```
 
 ## Set up a cron job for paste expiration cleanup:
