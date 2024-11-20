@@ -25,3 +25,8 @@ yew = { version= "0.21.0", features=["csr"] }
 yew-router = "0.18.0"
 chrono = { version = "0.4", features = ["serde"] }
 humantime = "2.1.0"
+log = { version = "0.4.22", optional = true }
+wasm-logger = { version = "0.2", optional = true }
+
+[features]
+log = ["dep:log", "dep:wasm-logger"]
