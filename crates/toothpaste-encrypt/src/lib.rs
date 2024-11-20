@@ -22,6 +22,7 @@ pub struct EncryptedPaste {
 pub struct PasteResponse {
     pub filename: String,
     pub content: String,
+    pub expire_time: String,
 }
 
 pub fn generate_key() -> [u8; 32] {
@@ -70,7 +71,11 @@ pub fn decrypt_paste(paste: &PasteResponse, key_base64: &str) -> Result<PasteRes
     // Decrypt content
     let content = decrypt_data(&cipher, &paste.content)?;
 
-    Ok(PasteResponse { filename, content })
+    Ok(PasteResponse {
+        filename,
+        content,
+        expire_time: paste.expire_time.clone(),
+    })
 }
 
 fn decrypt_data(cipher: &Aes256Gcm, data: &str) -> Result<String, String> {

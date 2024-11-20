@@ -1,7 +1,10 @@
+use chrono::{DateTime, Utc};
 use gloo_net::http::Request;
 use gloo_timers::callback::Timeout;
+use humantime::format_duration;
 use std::ffi::OsStr;
 use std::path::Path as StdPath;
+use std::time::Duration;
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
 use syntect::parsing::SyntaxSet;
@@ -32,6 +35,25 @@ pub struct GetPaste {
     loaded: bool,
     copy_state: CopyState,
     error: Option<String>,
+    expire_time: Option<String>,
+    remaining_time: Option<String>,
+}
+
+impl GetPaste {
+    fn format_remaining_time(&self) -> Option<String> {
+        let expire_time = self.expire_time.as_ref()?;
+        let expire_datetime = DateTime::parse_from_rfc3339(&format!("{}Z", expire_time)).ok()?;
+        let now = Utc::now();
+
+        if expire_datetime <= now {
+            return Some("Expired".to_string());
+        }
+
+        let duration = expire_datetime.signed_duration_since(now);
+        let std_duration = Duration::from_secs(duration.num_seconds().max(0) as u64);
+
+        Some(format!("Expires in {}", format_duration(std_duration)))
+    }
 }
 
 pub enum Msg {
@@ -78,6 +100,8 @@ impl Component for GetPaste {
             copy_state: CopyState::Idle,
             loaded: false,
             error: None,
+            expire_time: None,
+            remaining_time: None,
         }
     }
 
@@ -86,6 +110,8 @@ impl Component for GetPaste {
             Msg::PasteLoaded(paste) => {
                 self.filename = paste.filename.clone();
                 self.content = paste.content.clone();
+                self.expire_time = Some(paste.expire_time.clone());
+                self.remaining_time = self.format_remaining_time();
                 self.loaded = true;
                 true
             }
@@ -133,6 +159,17 @@ impl Component for GetPaste {
             html! {
                 <section class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <h1 class="title">{ &self.filename }</h1>
+                    {
+                        if let Some(remaining) = &self.remaining_time {
+                            html! {
+                                <div class="mb-4 text-sm text-gray-500">
+                                    { remaining }
+                                </div>
+                            }
+                        } else {
+                            html! {}
+                        }
+                    }
                     <div class="mb-6">
                         <button
                             class="btn btn-primary mr-2"

@@ -1718,6 +1718,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
+name = "humantime"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
+
+[[package]]
 name = "hyper"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3750,14 +3756,18 @@ name = "toothpaste-frontend"
 version = "0.6.4"
 dependencies = [
  "base64",
+ "chrono",
  "gloo-net 0.6.0",
  "gloo-timers 0.3.0",
+ "humantime",
  "indexmap",
+ "log",
  "serde",
  "serde_json",
  "syntect",
  "toothpaste-encrypt",
  "wasm-bindgen-futures",
+ "wasm-logger",
  "web-sys",
  "yew",
  "yew-router",
