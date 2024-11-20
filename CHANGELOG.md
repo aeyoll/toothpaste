@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.5 - 2024-11-20
+#### Bug Fixes
+- set word-wrap to prevent overflow - (126bc7d) - aeyoll
+#### Documentation
+- update instructions for cli - (f34f2c1) - aeyoll
+#### Features
+- **(#4)** display the remaining time before the paste disappear - (56410a2) - *aeyoll*
+- allow to log in the console by enabling a feature flag - (1ac12e4) - aeyoll
+
+- - -
+
 ## 0.6.3 - 2024-11-13
 #### Bug Fixes
 - update static images urls - (0342b68) - aeyoll

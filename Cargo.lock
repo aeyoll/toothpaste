@@ -3702,7 +3702,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-backend"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "axum",
  "chrono",
@@ -3725,7 +3725,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-cli"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "base64",
  "clap 4.5.20",
@@ -3736,7 +3736,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-encrypt"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "aes-gcm",
  "base64",
@@ -3745,7 +3745,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-entity"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "sea-orm",
  "serde",
@@ -3753,7 +3753,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-frontend"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "base64",
  "chrono",
@@ -3775,7 +3775,7 @@ dependencies = [
 
 [[package]]
 name = "toothpaste-migration"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "async-std",
  "sea-orm-migration",
