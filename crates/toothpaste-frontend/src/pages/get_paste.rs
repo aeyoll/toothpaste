@@ -110,7 +110,7 @@ impl Component for GetPaste {
             Msg::PasteLoaded(paste) => {
                 self.filename = paste.filename.clone();
                 self.content = paste.content.clone();
-                self.expire_time = Some(paste.expire_time.clone());
+                self.expire_time = paste.expire_time.clone();
                 self.remaining_time = self.format_remaining_time();
                 self.loaded = true;
                 true

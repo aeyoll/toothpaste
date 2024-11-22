@@ -22,7 +22,7 @@ pub struct EncryptedPaste {
 pub struct PasteResponse {
     pub filename: String,
     pub content: String,
-    pub expire_time: String,
+    pub expire_time: Option<String>,
 }
 
 pub fn generate_key() -> [u8; 32] {
