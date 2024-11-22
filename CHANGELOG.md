@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.6 - 2024-11-22
+#### Bug Fixes
+- prevent panic when displaying a paste with no expiration - (ae0e043) - aeyoll
+#### Style
+- apply fmt - (e43d768) - aeyoll
+
+- - -
+
 ## 0.6.5 - 2024-11-20
 #### Bug Fixes
 - set word-wrap to prevent overflow - (126bc7d) - aeyoll
