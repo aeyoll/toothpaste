@@ -42,6 +42,7 @@ pub async fn new_paste(
     if expire_after > 0 {
         let expire_time = now + Duration::try_seconds(expire_after).unwrap();
         new_paste.expire_time = ActiveValue::Set(Some(expire_time));
+        new_paste.expire_after = ActiveValue::Set(Some(expire_after));
     }
 
     let paste: paste::Model = new_paste
