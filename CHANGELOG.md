@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.7 - 2025-03-11
+#### Bug Fixes
+- add missing save of the expire_after field - (f4998d8) - aeyoll
+#### Build system
+- upgrade dependencies - (682a948) - aeyoll
+
+- - -
+
 ## 0.6.6 - 2024-11-22
 #### Bug Fixes
 - prevent panic when displaying a paste with no expiration - (ae0e043) - aeyoll
