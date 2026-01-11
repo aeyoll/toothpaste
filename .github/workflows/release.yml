@@ -37,27 +37,29 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-${{ matrix.target }}-
 
       - name: Cache Trunk
+        id: cache-trunk
         uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/trunk
-          key: ${{ runner.os }}-${{ matrix.target }}-trunk-${{ hashFiles('~/.cargo/bin/trunk') }}
+          key: ${{ runner.os }}-trunk-${{ hashFiles('~/.cargo/bin/trunk') }}
 
       - name: Install Trunk
         run: cargo install trunk
         if: steps.cache-trunk.outputs.cache-hit != 'true'
 
       - name: Cache wasm-bindgen
+        id: cache-wasm-bindgen
         uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/wasm-bindgen
-          key: ${{ runner.os }}-${{ matrix.target }}-wasm-bindgen-${{ hashFiles('~/.cargo/bin/wasm-bindgen') }}
+          key: ${{ runner.os }}-wasm-bindgen-${{ hashFiles('~/.cargo/bin/wasm-bindgen') }}
 
       - name: Install wasm-bindgen
         run: cargo install wasm-bindgen-cli
