@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.7.0 - 2026-01-11
+#### Build system
+- update Rust dependencies - (dc68261) - *aeyoll*
+#### Continuous Integration
+- simplify cache keys - (22b0715) - *aeyoll*
+- use taiki-e cross compilation action - (8c76383) - *aeyoll*
+
+- - -
+
 ## 0.6.7 - 2025-03-11
 #### Bug Fixes
 - add missing save of the expire_after field - (f4998d8) - aeyoll
