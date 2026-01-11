@@ -194,7 +194,7 @@ pub fn paste_form(_props: &Props) -> Html {
                         class="form-control"
                         required=true
                         rows="20"
-                        value={paste_data.content.clone()}
+                        default_value={paste_data.content.clone()}
                         onchange={
                             let update = update.clone();
 
@@ -203,7 +203,7 @@ pub fn paste_form(_props: &Props) -> Html {
                                 update.emit(PasteAction::SetContent(value));
                             })
                         }
-                    ></textarea>
+                    />
                 </div>
 
                 <div class="mb-3">
@@ -222,7 +222,7 @@ pub fn paste_form(_props: &Props) -> Html {
                         { for expire_after_values.iter().map(|(key, value)| {
                             let selected = *key == "86400";
                             html! {
-                                <option value={key.to_string()} selected={selected}>{value}</option>
+                                <option value={key.to_string()} selected={selected}>{*value}</option>
                             }
                         }) }
                     </select>

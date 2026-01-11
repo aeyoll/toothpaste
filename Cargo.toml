@@ -20,10 +20,10 @@ toothpaste-backend = { path = "./crates/toothpaste-backend" }
 toothpaste-frontend = { path = "./crates/toothpaste-frontend" }
 toothpaste-cli = { path = "./crates/toothpaste-cli" }
 toothpaste-encrypt = { path = "./crates/toothpaste-encrypt" }
-aes-gcm = "0.10.1"
+aes-gcm = "0.10.3"
 base64 = "0.22.1"
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0.128"
+serde_json = "1.0.149"
 
 [profile.release]
 panic = 'abort'

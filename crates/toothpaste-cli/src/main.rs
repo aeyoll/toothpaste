@@ -81,10 +81,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Send request to API
     let api_route = format!("{}/api/paste/new", &cli.url);
 
-    let resp = ureq::post(&api_route).send_json(&encrypted_paste)?;
+    let mut resp = ureq::post(&api_route).send_json(&encrypted_paste)?;
 
     // Get paste ID from response
-    let paste_response: PasteCreateResponse = resp.into_json()?;
+    let paste_response: PasteCreateResponse = resp.body_mut().read_json()?;
 
     // Generate key in base64
     let key_base64 = general_purpose::URL_SAFE_NO_PAD.encode(key);

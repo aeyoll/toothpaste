@@ -47,7 +47,7 @@ async fn main() {
     let app = Router::new()
         .route("/api/paste/cleanup", get(cleanup))
         .route("/api/paste/new", post(new_paste))
-        .route("/api/paste/:id", get(get_paste))
+        .route("/api/paste/{id}", get(get_paste))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)

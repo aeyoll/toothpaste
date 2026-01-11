@@ -17,15 +17,15 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 gloo-net = "0.6.0"
 gloo-timers = "0.3.0"
-indexmap = "2.6.0"
-syntect = { version = "5.0", default-features = false, features = ["default-fancy"] }
+indexmap = "2.13.0"
+syntect = { version = "5.3", default-features = false, features = ["default-fancy"] }
 wasm-bindgen-futures = "0.4"
-web-sys = { version = "0.3.72", features = ["Navigator", "Clipboard"] }
-yew = { version= "0.21.0", features=["csr"] }
-yew-router = "0.18.0"
+web-sys = { version = "0.3.83", features = ["Navigator", "Clipboard"] }
+yew = { version= "0.22.0", features=["csr"] }
+yew-router = "0.19.0"
 chrono = { version = "0.4", features = ["serde"] }
-humantime = "2.1.0"
-log = { version = "0.4.22", optional = true }
+humantime = "2.3.0"
+log = { version = "0.4.29", optional = true }
 wasm-logger = { version = "0.2", optional = true }
 
 [features]
